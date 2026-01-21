@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PolicySet
+    xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17 http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
+    PolicySetId="FederatedLearningAccessControlPolicySet"
+    Version="3.0"
+    PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:deny-overrides">
+
+    <Description>
+        Multi-task FL (task-scoped federation) PolicySet.
+
+        Key design changes:
+        - Policy-level Targets (by action) so non-relevant policies become NotApplicable.
+        - Single task-scoped role attribute: subject:task_role ∈ {"participant","observer"}.
+        - Task validity enforced via resource:task_id and resource:task_expires > environment:current-dateTime.
+        - Membership enforced via subject:is_member_of_task and subject:task_membership_expires > now.
+
+        Actions:
+        - task-authorization: checks task_id + task_expires
+        - node-activation: checks task_id + task_expires + membership + membership expiry
+        - train / aggregate: checks task validity + membership + role == participant
+        - evaluate: checks task validity + membership + role in {participant, observer}
+    </Description>
+
+    <Target/>
+
+    <!-- ================================================================ -->
+    <!-- Policy 1: Task Authorization (task-authorization) -->
+    <!-- ================================================================ -->
+    <Policy
+        PolicyId="TaskApprovalPolicy"
+        Version="3.0"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+
+        <Description>
+            Task authorization gate: only permits if task_id matches AND task has not expired.
+        </Description>
+
+        <!-- Policy-level Target: only evaluate this policy for task-authorization -->
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">task-authorization</AttributeValue>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                            AttributeId="action"
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            MustBePresent="true"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+
+        <!-- Deny if task_id != medical OR task expired -->
+        <Rule RuleId="deny-wrong-task-or-expired" Effect="Deny">
+            <Description>Deny if task_id is not medical or task_expires is not in the future</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+
+                    <!-- task_id != medical -->
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                    AttributeId="task_id"
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                        </Apply>
+                    </Apply>
+
+                    <!-- task expired: NOT(task_expires > now) -->
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                    AttributeId="task_expires"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                    AttributeId="current-dateTime"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+                    </Apply>
+
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Deny">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">task-authorization-denied</AttributeValue>
+                    </AttributeAssignment>
+                    <AttributeAssignment AttributeId="urn:flwr:audit:reason">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">wrong-task-id-or-task-expired</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+
+        <!-- Permit if task_id == medical AND task_expires > now -->
+        <Rule RuleId="permit-task-valid" Effect="Permit">
+            <Description>Permit task authorization if task is medical and not expired</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                AttributeId="task_id"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                AttributeId="task_expires"
+                                DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                AttributeId="current-dateTime"
+                                DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Permit">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">task-authorization-granted</AttributeValue>
+                    </AttributeAssignment>
+                    <AttributeAssignment AttributeId="urn:flwr:audit:task-id">
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                            AttributeId="task_id"
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            MustBePresent="true"/>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+    </Policy>
+
+    <!-- ================================================================ -->
+    <!-- Policy 2: Membership Validity (node-activation) -->
+    <!-- ================================================================ -->
+    <Policy
+        PolicyId="MembershipValidityPolicy"
+        Version="3.0"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+
+        <Description>
+            Node activation gate: requires task valid + node is member of task + membership not expired.
+        </Description>
+
+        <!-- Policy-level Target: only evaluate for node-activation -->
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">node-activation</AttributeValue>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                            AttributeId="action"
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            MustBePresent="true"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+
+        <!-- Deny if task invalid OR not member OR membership expired -->
+        <Rule RuleId="deny-activation-invalid" Effect="Deny">
+            <Description>Deny node activation unless task valid, member of task, and membership not expired</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+
+                    <!-- task_id != medical -->
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                    AttributeId="task_id"
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                        </Apply>
+                    </Apply>
+
+                    <!-- task expired -->
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                    AttributeId="task_expires"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                    AttributeId="current-dateTime"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+                    </Apply>
+
+                    <!-- is_member_of_task != true -->
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                    AttributeId="is_member_of_task"
+                                    DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+                        </Apply>
+                    </Apply>
+
+                    <!-- membership expired -->
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                    AttributeId="task_membership_expires"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                    AttributeId="current-dateTime"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+                    </Apply>
+
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Deny">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">node-activation-denied</AttributeValue>
+                    </AttributeAssignment>
+                    <AttributeAssignment AttributeId="urn:flwr:audit:reason">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">task-invalid-or-not-member-or-membership-expired</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+
+        <!-- Permit if task valid AND member AND membership valid -->
+        <Rule RuleId="permit-activation-valid" Effect="Permit">
+            <Description>Permit node activation if task valid, member of task, and membership not expired</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                AttributeId="task_id"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                AttributeId="task_expires"
+                                DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                AttributeId="current-dateTime"
+                                DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                AttributeId="is_member_of_task"
+                                DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                AttributeId="task_membership_expires"
+                                DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                AttributeId="current-dateTime"
+                                DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Permit">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">node-activation-granted</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+    </Policy>
+
+    <!-- ================================================================ -->
+    <!-- Policy 3: Training + Aggregation (train/aggregate) -->
+    <!-- ================================================================ -->
+    <Policy
+        PolicyId="TrainingAccessPolicy"
+        Version="3.0"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+
+        <Description>
+            Training and aggregation allowed only for task_role == "participant".
+            Also requires task validity + membership validity.
+        </Description>
+
+        <!-- Policy-level Target: only evaluate for train or aggregate -->
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">train</AttributeValue>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                            AttributeId="action"
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            MustBePresent="true"/>
+                    </Match>
+                </AllOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">aggregate</AttributeValue>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                            AttributeId="action"
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            MustBePresent="true"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+
+        <!-- Deny unless task valid + membership valid + role participant -->
+        <Rule RuleId="deny-train-aggregate-nonparticipant-or-invalid" Effect="Deny">
+            <Description>Deny train/aggregate unless task valid, membership valid, and role is participant</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                    AttributeId="task_id"
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                        </Apply>
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                    AttributeId="task_expires"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                    AttributeId="current-dateTime"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                    AttributeId="task_membership_expires"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                    AttributeId="current-dateTime"
+                                    DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                    MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                    AttributeId="task_role"
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">participant</AttributeValue>
+                        </Apply>
+
+                    </Apply>
+                </Apply>
+            </Condition>
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Deny">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">train-or-aggregate-denied</AttributeValue>
+                    </AttributeAssignment>
+                    <AttributeAssignment AttributeId="urn:flwr:audit:reason">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">task-invalid-membership-invalid-or-nonparticipant</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+
+        <Rule RuleId="permit-train-aggregate-valid-participant" Effect="Permit">
+            <Description>Permit train/aggregate if task valid, membership valid, and role is participant</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                                 AttributeId="task_id"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                                 AttributeId="task_expires"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                                 AttributeId="current-dateTime"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                 AttributeId="task_membership_expires"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                                 AttributeId="current-dateTime"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                 AttributeId="task_role"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">participant</AttributeValue>
+                    </Apply>
+
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Permit">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">train-or-aggregate-granted</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+    </Policy>
+
+    <!-- ================================================================ -->
+    <!-- Policy 4: Evaluation (evaluate) -->
+    <!-- ================================================================ -->
+    <Policy
+        PolicyId="EvaluationAccessPolicy"
+        Version="3.0"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+
+        <Description>
+            Evaluation allowed for task_role ∈ {"participant","observer"}.
+            Requires task validity + membership validity.
+        </Description>
+
+        <!-- Policy-level Target: only evaluate for evaluate -->
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">evaluate</AttributeValue>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                            AttributeId="action"
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            MustBePresent="true"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+
+        <!-- Deny unless task valid + membership valid + role allowed -->
+        <Rule RuleId="deny-evaluate-invalid" Effect="Deny">
+            <Description>Deny evaluate unless task valid, membership valid, and role is participant/observer</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                                     AttributeId="task_id"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                        </Apply>
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                                     AttributeId="task_expires"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                                     AttributeId="current-dateTime"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                     AttributeId="is_member_of_task"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+                        </Apply>
+
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                     AttributeId="task_membership_expires"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                                     AttributeId="current-dateTime"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                        </Apply>
+
+                        <!-- role allowed -->
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                         AttributeId="task_role"
+                                                         DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                         MustBePresent="true"/>
+                                </Apply>
+                                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">participant</AttributeValue>
+                            </Apply>
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                         AttributeId="task_role"
+                                                         DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                         MustBePresent="true"/>
+                                </Apply>
+                                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">observer</AttributeValue>
+                            </Apply>
+                        </Apply>
+
+                    </Apply>
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Deny">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">evaluation-access-denied</AttributeValue>
+                    </AttributeAssignment>
+                    <AttributeAssignment AttributeId="urn:flwr:audit:reason">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">task-invalid-membership-invalid-or-role-not-allowed</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+
+        <Rule RuleId="permit-evaluate-valid" Effect="Permit">
+            <Description>Permit evaluate if task valid, membership valid, and role allowed</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+                                                 AttributeId="task_id"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+                    </Apply>
+
+
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                 AttributeId="task_membership_expires"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                                                 AttributeId="current-dateTime"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#dateTime"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                     AttributeId="task_role"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">participant</AttributeValue>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                     AttributeId="task_role"
+                                                     DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                     MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">observer</AttributeValue>
+                        </Apply>
+                    </Apply>
+
+                </Apply>
+            </Condition>
+
+            <ObligationExpressions>
+                <ObligationExpression ObligationId="urn:flwr:obligation:audit-log" FulfillOn="Permit">
+                    <AttributeAssignment AttributeId="urn:flwr:audit:event-type">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">evaluation-access-granted</AttributeValue>
+                    </AttributeAssignment>
+                </ObligationExpression>
+            </ObligationExpressions>
+        </Rule>
+    </Policy>
+
+</PolicySet>

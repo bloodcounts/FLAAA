@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Test Case: S-TC016
+  Description: Action whitespace variant 'train ' should be NotApplicable (closed-world)
+  Expected Decision: NotApplicable
+  Policy Rule: N/A (no matching policy)
+  Threat Category: Unauthorised action (normalization)
+-->
+<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+
+  <!-- Action -->
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute AttributeId="action" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">train </AttributeValue>
+    </Attribute>
+  </Attributes>
+
+
+  <!-- Resource -->
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">
+    <Attribute AttributeId="task_id" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_expires" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">2026-12-31T23:59:59Z</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+
+  <!-- Subject -->
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+    <Attribute AttributeId="is_member_of_task" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_membership_expires" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">2026-12-31T23:59:59Z</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_role" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">participant</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+
+  <!-- Environment -->
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">
+    <Attribute AttributeId="current-dateTime" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">2025-06-15T12:00:00Z</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+</Request>

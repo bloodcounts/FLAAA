@@ -1,0 +1,42 @@
+{
+  "name": "luas",
+  "version": "1.2.2",
+  "description": "Node.js Policy Decision Point",
+  "main": "index.js",
+  "scripts": {
+    "nvm": "~/.nvm/nvm-exec which node | xargs -J % ln -sf % ./.nvm-node && chmod +x ./.nvm-node",
+    "start": "node app.js",
+    "conformance": "./node_modules/.bin/mocha ./tests/conformance/**/*.spec.js"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:bloodcounts/luas.git"
+  },
+  "keywords": [
+    "PDP"
+  ],
+  "author": "Fan Zhang <fanzhang0916@gmail.com>",
+  "license": "BSD-2-Clause-FreeBSD",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.12.5",
+    "@grpc/proto-loader": "^0.7.13",
+    "@xmldom/xmldom": "^0.9.5",
+    "body-parser": "^1.20.3",
+    "chai": "^5.1.2",
+    "express": "^4.21.2",
+    "http-status-codes": "^2.3.0",
+    "jws": "^4.0.1",
+    "mocha": "^11.0.1",
+    "moment": "latest",
+    "nodemon": "^3.1.9",
+    "shelljs": "^0.8.5",
+    "sqlite3": "^5.1.7",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "winston": "^3.19.0"
+  }
+}

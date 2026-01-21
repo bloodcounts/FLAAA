@@ -1,0 +1,666 @@
+{
+  "run_at": "2026-01-02T14:41:13.208Z",
+  "policy": "/home/fan/projects/work/luas/comformance/policyset_obligation.xml",
+  "total": 47,
+  "passed": 47,
+  "failed": 0,
+  "items": [
+    {
+      "test_id": "P1-TC01",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "P1-TC02",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"unauthorized_task\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P1-TC03",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P1-TC04",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"unauthorized_task\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P1-TC05",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P2-TC01",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "P2-TC02",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":false}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P2-TC03",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P2-TC04",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P2-TC05",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"unauthorized_task\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P2-TC06",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC01",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC02",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"observer\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC03",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"admin\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC04",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC05",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC06",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"unauthorized_task\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC07",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"aggregate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC08",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"aggregate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"observer\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P3-TC09",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"aggregate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC01",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC02",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"observer\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC03",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"guest\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC04",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":false}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC05",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"observer\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC06",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2024-01-01T00:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "P4-TC07",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"evaluate\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"unauthorized_task\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "E-TC01",
+      "expected": "NotApplicable",
+      "actual": "NotApplicable",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"delete\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "NotApplicable",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC001",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC002",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC003",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC004",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC005",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC006",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC007",
+      "expected": "Indeterminate",
+      "actual": "Indeterminate",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[]",
+        "decision": "Indeterminate",
+        "reason": null,
+        "message": "Malformed dateTime value: not-a-datetime"
+      }
+    },
+    {
+      "test_id": "S-TC008",
+      "expected": "Indeterminate",
+      "actual": "Indeterminate",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[]",
+        "decision": "Indeterminate",
+        "reason": null,
+        "message": "Malformed attribute value for type: http://www.w3.org/2001/XMLSchema#boolean"
+      }
+    },
+    {
+      "test_id": "S-TC009",
+      "expected": "Indeterminate",
+      "actual": "Indeterminate",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[]",
+        "decision": "Indeterminate",
+        "reason": null,
+        "message": "Malformed dateTime value: 2025-06-15T12:00:00"
+      }
+    },
+    {
+      "test_id": "S-TC010",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"observer\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC011",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"unauthorized_task\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC012",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:01.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC013",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC014",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"node-activation\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC015",
+      "expected": "NotApplicable",
+      "actual": "NotApplicable",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"Train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "NotApplicable",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC016",
+      "expected": "NotApplicable",
+      "actual": "NotApplicable",
+      "pass": true,
+      "details": {
+        "obligations": "[]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train \"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"participant\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "NotApplicable",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC017",
+      "expected": "Permit",
+      "actual": "Permit",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:01.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Permit",
+        "reason": null,
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC018",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T11:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    },
+    {
+      "test_id": "S-TC019",
+      "expected": "Deny",
+      "actual": "Deny",
+      "pass": true,
+      "details": {
+        "obligations": "[{\"obligationId\":\"urn:flwr:obligation:audit-log\",\"fulfillOn\":\"Deny\",\"assignments\":[{\"attributeId\":\"urn:flwr:audit:event-type\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"task-authorization-denied\",\"designator\":null},{\"attributeId\":\"urn:flwr:audit:reason\",\"category\":null,\"issuer\":null,\"dataType\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"wrong-task-id-or-task-expired\",\"designator\":null}]}]",
+        "attributes": "[{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\",\"content\":null,\"attributes\":[{\"id\":\"action\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"train\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:attribute-category:resource\",\"content\":null,\"attributes\":[{\"id\":\"task_id\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"medical\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\",\"content\":null,\"attributes\":[{\"id\":\"is_member_of_task\",\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#boolean\",\"value\":true}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_membership_expires\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2026-12-31T23:59:59.000Z\",\"nanoseconds\":0,\"timeZone\":0,\"defaultedTimeZone\":0}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"task_role\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"observer\"}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"reputation_score_scaled\",\"type\":\"http://www.w3.org/2001/XMLSchema#integer\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#integer\",\"value\":9999}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null},{\"category\":\"urn:oasis:names:tc:xacml:3.0:attribute-category:environment\",\"content\":null,\"attributes\":[{\"id\":\"current-dateTime\",\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#dateTime\",\"value\":\"2025-06-15T12:00:00.000Z\",\"nanoseconds\":0,\"timeZone\":60,\"defaultedTimeZone\":60}],\"includeInResult\":true,\"xacmlVersion\":3},{\"id\":\"request_nonce\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"issuer\":null,\"issueInstant\":null,\"attributeValues\":[{\"type\":\"http://www.w3.org/2001/XMLSchema#string\",\"value\":\"abc123\"}],\"includeInResult\":true,\"xacmlVersion\":3}],\"id\":null}]",
+        "decision": "Deny",
+        "reason": [
+          "wrong-task-id-or-task-expired"
+        ],
+        "message": null
+      }
+    }
+  ]
+}

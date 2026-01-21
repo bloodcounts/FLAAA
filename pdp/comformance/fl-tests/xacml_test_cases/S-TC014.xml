@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Test Case: S-TC014
+  Description: Place is_member_of_task under Resource instead of Subject (node-activation) should not permit
+  Expected Decision: Deny
+  Policy Rule: deny-category-mismatch
+  Threat Category: Category confusion / bypass attempt
+-->
+<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+
+  <!-- Action -->
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute AttributeId="action" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">node-activation</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+
+  <!-- Resource -->
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">
+    <Attribute AttributeId="task_id" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_expires" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">2026-12-31T23:59:59Z</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="is_member_of_task" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+
+  <!-- Subject -->
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+    <Attribute AttributeId="task_membership_expires" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">2026-12-31T23:59:59Z</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+
+  <!-- Environment -->
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">
+    <Attribute AttributeId="current-dateTime" IncludeInResult="true">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">2025-06-15T12:00:00Z</AttributeValue>
+    </Attribute>
+  </Attributes>
+
+</Request>

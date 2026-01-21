@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+result
+npm-debug.log
+mem_dump
+request2
+localTest.js
+xacml/.DS_Store
+*.csv
+logs/

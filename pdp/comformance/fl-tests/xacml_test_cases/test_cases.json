@@ -1,0 +1,1468 @@
+[
+  {
+    "test_id": "P1-TC01",
+    "description": "Valid task authorization: correct task_id, future expiry",
+    "action": "task-authorization",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-task-valid",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P1-TC02",
+    "description": "Invalid task_id: unauthorized task identifier",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-wrong-task-or-expired",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "unauthorized_task",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P1-TC03",
+    "description": "Expired task: task_expires in the past",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-wrong-task-or-expired",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2024-01-01T00:00:00Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P1-TC04",
+    "description": "Both invalid: wrong task_id AND expired",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-wrong-task-or-expired",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "unauthorized_task",
+        "task_expires": "2024-01-01T00:00:00Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P1-TC05",
+    "description": "Boundary: task_expires equals current-dateTime (not greater)",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-wrong-task-or-expired",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2025-06-15T12:00:00Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P2-TC01",
+    "description": "Valid node activation: member with valid task and membership",
+    "action": "node-activation",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-activation-valid",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P2-TC02",
+    "description": "Not a task member: is_member_of_task=false",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-activation-invalid",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": false,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P2-TC03",
+    "description": "Expired membership: task_membership_expires in past",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-activation-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2024-01-01T00:00:00Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P2-TC04",
+    "description": "Task expired: valid member but task_expires in past",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-activation-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2024-01-01T00:00:00Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P2-TC05",
+    "description": "Wrong task: invalid task_id with valid membership",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-activation-invalid",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "unauthorized_task",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P2-TC06",
+    "description": "Boundary: membership_expires equals current-dateTime",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-activation-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2025-06-15T12:00:00Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC01",
+    "description": "Valid training: participant with valid task and membership",
+    "action": "train",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-train-aggregate-valid-participant",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC02",
+    "description": "Privilege escalation: observer attempting train action",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Privilege escalation",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "observer"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC03",
+    "description": "Unknown role: unrecognised task_role attempting train",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Privilege escalation",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "admin"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC04",
+    "description": "Expired membership: participant with past membership_expires",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2024-01-01T00:00:00Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC05",
+    "description": "Expired task: participant with past task_expires",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2024-01-01T00:00:00Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC06",
+    "description": "Wrong task: participant in unauthorized task",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "unauthorized_task",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC07",
+    "description": "Valid aggregation: participant with valid credentials",
+    "action": "aggregate",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-train-aggregate-valid-participant",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "aggregate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC08",
+    "description": "Privilege escalation: observer attempting aggregate action",
+    "action": "aggregate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Privilege escalation",
+    "request": {
+      "action": "aggregate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "observer"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P3-TC09",
+    "description": "Expired membership: participant aggregate with past expiry",
+    "action": "aggregate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "aggregate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2024-01-01T00:00:00Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC01",
+    "description": "Valid evaluation: participant can evaluate",
+    "action": "evaluate",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-evaluate-valid",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC02",
+    "description": "Valid evaluation: observer can evaluate (read-only access)",
+    "action": "evaluate",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-evaluate-valid",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "observer"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC03",
+    "description": "Unknown role: unrecognised role attempting evaluate",
+    "action": "evaluate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-evaluate-invalid",
+    "threat_category": "Privilege escalation",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "guest"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC04",
+    "description": "Not a member: is_member_of_task=false",
+    "action": "evaluate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-evaluate-invalid",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": false,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC05",
+    "description": "Expired membership: valid role but membership expired",
+    "action": "evaluate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-evaluate-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2024-01-01T00:00:00Z",
+        "task_role": "observer"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC06",
+    "description": "Expired task: valid member/role but task expired",
+    "action": "evaluate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-evaluate-invalid",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2024-01-01T00:00:00Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "P4-TC07",
+    "description": "Wrong task: valid credentials but unauthorized task",
+    "action": "evaluate",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-evaluate-invalid",
+    "threat_category": "Unauthorised task participation",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "unauthorized_task",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "E-TC01",
+    "description": "Unknown action: action not in policy set",
+    "action": "delete",
+    "expected_decision": "NotApplicable",
+    "policy_rule": "N/A (no matching policy)",
+    "threat_category": "Unauthorised action",
+    "request": {
+      "action": "delete",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC001",
+    "description": "Missing task_expires attribute (task-authorization) should not permit",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-missing-attribute",
+    "threat_category": "Attribute omission / fail-closed",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [
+          "task_expires"
+        ],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC002",
+    "description": "Missing task_id attribute (task-authorization) should not permit",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-missing-attribute",
+    "threat_category": "Attribute omission / fail-closed",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [
+          "task_id"
+        ],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC003",
+    "description": "Missing current-dateTime (environment) should not permit",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-missing-attribute",
+    "threat_category": "Attribute omission / fail-closed",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [
+          "current-dateTime"
+        ],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC004",
+    "description": "node-activation missing is_member_of_task should not permit",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-missing-attribute",
+    "threat_category": "Attribute omission / fail-closed",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [
+          "is_member_of_task"
+        ],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC005",
+    "description": "node-activation missing task_membership_expires should not permit",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-missing-attribute",
+    "threat_category": "Attribute omission / fail-closed",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [
+          "task_membership_expires"
+        ],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC006",
+    "description": "train missing task_role should not permit",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-missing-attribute",
+    "threat_category": "Attribute omission / fail-closed",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [
+          "task_role"
+        ],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC007",
+    "description": "Malformed dateTime for task_expires should not permit (expect Indeterminate or Deny)",
+    "action": "task-authorization",
+    "expected_decision": "Indeterminate",
+    "policy_rule": "indeterminate-malformed-datetime",
+    "threat_category": "Parser robustness / datatype abuse",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {
+          "task_expires": {
+            "value": "not-a-datetime",
+            "datatype": "http://www.w3.org/2001/XMLSchema#dateTime"
+          }
+        },
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC008",
+    "description": "Malformed boolean for is_member_of_task should not permit (expect Indeterminate or Deny)",
+    "action": "node-activation",
+    "expected_decision": "Indeterminate",
+    "policy_rule": "indeterminate-malformed-boolean",
+    "threat_category": "Parser robustness / datatype abuse",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {
+          "is_member_of_task": {
+            "value": "truee",
+            "datatype": "http://www.w3.org/2001/XMLSchema#boolean"
+          }
+        },
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC009",
+    "description": "Malformed current-dateTime should not permit (expect Indeterminate or Deny)",
+    "action": "evaluate",
+    "expected_decision": "Indeterminate",
+    "policy_rule": "indeterminate-malformed-datetime",
+    "threat_category": "Parser robustness / datatype abuse",
+    "request": {
+      "action": "evaluate",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {
+          "current-dateTime": {
+            "value": "2025-06-15T12:00:00",
+            "datatype": "http://www.w3.org/2001/XMLSchema#dateTime"
+          }
+        },
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC010",
+    "description": "Duplicate task_role values (participant + observer) on train should not permit",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-ambiguous-attributes",
+    "threat_category": "Attribute ambiguity / multi-value abuse",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {
+          "task_role": [
+            "observer"
+          ]
+        },
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC011",
+    "description": "Duplicate task_id values (medical + unauthorized_task) should not permit",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-ambiguous-attributes",
+    "threat_category": "Attribute ambiguity / multi-value abuse",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {
+          "task_id": [
+            "unauthorized_task"
+          ]
+        },
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC012",
+    "description": "Duplicate current-dateTime values should not permit",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-ambiguous-attributes",
+    "threat_category": "Attribute ambiguity / multi-value abuse",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {
+          "current-dateTime": [
+            "2025-06-15T12:00:01Z"
+          ]
+        },
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC013",
+    "description": "Place task_role under Resource instead of Subject (train) should not permit",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-category-mismatch",
+    "threat_category": "Category confusion / bypass attempt",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {
+          "task_role": "urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+        },
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC014",
+    "description": "Place is_member_of_task under Resource instead of Subject (node-activation) should not permit",
+    "action": "node-activation",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-category-mismatch",
+    "threat_category": "Category confusion / bypass attempt",
+    "request": {
+      "action": "node-activation",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {
+          "is_member_of_task": "urn:oasis:names:tc:xacml:1.0:attribute-category:resource"
+        },
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC015",
+    "description": "Action case-variant 'Train' should be NotApplicable (closed-world)",
+    "action": "Train",
+    "expected_decision": "NotApplicable",
+    "policy_rule": "N/A (no matching policy)",
+    "threat_category": "Unauthorised action (normalization)",
+    "request": {
+      "action": "Train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC016",
+    "description": "Action whitespace variant 'train ' should be NotApplicable (closed-world)",
+    "action": "train ",
+    "expected_decision": "NotApplicable",
+    "policy_rule": "N/A (no matching policy)",
+    "threat_category": "Unauthorised action (normalization)",
+    "request": {
+      "action": "train ",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "participant"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC017",
+    "description": "task_expires 1 second after current-dateTime should permit (task-authorization)",
+    "action": "task-authorization",
+    "expected_decision": "Permit",
+    "policy_rule": "permit-task-valid",
+    "threat_category": "N/A (happy path)",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2025-06-15T12:00:01Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC018",
+    "description": "task_expires 1 second before current-dateTime should deny (task-authorization)",
+    "action": "task-authorization",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-wrong-task-or-expired",
+    "threat_category": "Temporal policy violation",
+    "request": {
+      "action": "task-authorization",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2025-06-15T11:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": null,
+        "task_membership_expires": null,
+        "task_role": null
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": []
+      }
+    }
+  },
+  {
+    "test_id": "S-TC019",
+    "description": "Extra unknown attributes should not grant access (train observer remains deny)",
+    "action": "train",
+    "expected_decision": "Deny",
+    "policy_rule": "deny-train-aggregate-nonparticipant-or-invalid",
+    "threat_category": "Attribute injection",
+    "request": {
+      "action": "train",
+      "resource": {
+        "task_id": "medical",
+        "task_expires": "2026-12-31T23:59:59Z"
+      },
+      "subject": {
+        "is_member_of_task": true,
+        "task_membership_expires": "2026-12-31T23:59:59Z",
+        "task_role": "observer"
+      },
+      "environment": {
+        "current_datetime": "2025-06-15T12:00:00Z"
+      },
+      "adversarial": {
+        "omit_attributes": [],
+        "override_attributes": {},
+        "duplicate_attributes": {},
+        "category_override": {},
+        "extra_attributes": [
+          {
+            "category": "urn:oasis:names:tc:xacml:1.0:subject-category:access-subject",
+            "id": "reputation_score_scaled",
+            "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+            "value": "9999"
+          },
+          {
+            "category": "urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+            "id": "request_nonce",
+            "datatype": "http://www.w3.org/2001/XMLSchema#string",
+            "value": "abc123"
+          }
+        ]
+      }
+    }
+  }
+]
