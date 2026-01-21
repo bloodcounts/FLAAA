@@ -1,0 +1,1 @@
+python start_custom_superlink.py   --ssl-ca-certfile ../certificates/ca.crt   --ssl-certfile ../certificates/server.pem   --ssl-keyfile ../certificates/server.key   --enable-supernode-auth   --isolation subprocess

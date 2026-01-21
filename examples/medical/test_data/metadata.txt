@@ -1,0 +1,6 @@
+num_partitions: 3
+total_samples: 30162
+samples_per_partition: [10054, 9480, 9445]
+numerical_columns: ['age', 'fnlwgt', 'education.num', 'capital.gain', 'capital.loss', 'hours.per.week']
+categorical_columns: ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex', 'native.country']
+partition_strategy: age-biased for personalized federated learning

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flower-superlink-custom"
+version = "1.0.0"
+description = "Custom Flower SuperLink with Policy Enforcement Point integration"
+license = "Apache-2.0"
+requires-python = ">=3.8"
+
+dependencies = [
+    "flwr>=1.11.0",
+    "grpcio>=1.60.0",
+    "protobuf>=4.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+]
+
+[project.scripts]
+flower-superlink-custom = "start_custom_superlink:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["custom_fleet"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
