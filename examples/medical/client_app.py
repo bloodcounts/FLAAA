@@ -3,6 +3,7 @@
 import os
 import torch
 import logging
+import random
 from flwr.app import ArrayRecord, Context, Message, MetricRecord, RecordDict
 from flwr.clientapp import ClientApp
 
@@ -50,14 +51,7 @@ def train(msg: Message, context: Context):
     # 2. Determine client/partition ID (custom mapping)
     # ------------------------------------------------------------------- #
     raw_partition_id = context.node_config.get("partition-id", "unknown")
-    if raw_partition_id == "gb_uclh": 
-        partition_id = 0
-    elif raw_partition_id == "gb_barts":
-        partition_id = 1
-    elif raw_partition_id == "gb_cuh":
-        partition_id = 2
-    else:
-        partition_id = 1  # fallback
+    partition_id = random.choice([0, 1, 2])
 
     logging.info(
         f"[{federation}] Client '{raw_partition_id}' (partition {partition_id}) - "
@@ -156,17 +150,9 @@ def evaluate(msg: Message, context: Context):
     # ------------------------------------------------------------------- #
     # 2. Determine client/partition ID
     # ------------------------------------------------------------------- #
-    raw_partition_id = context. node_config.get("partition-id", "unknown")
-    
-    print(f"\nRaw partition ID: {raw_partition_id}")
-    if raw_partition_id == "gb_uclh":
-        partition_id = 0
-    elif raw_partition_id == "gb_barts":
-        partition_id = 1
-    elif raw_partition_id == "gb_cuh":
-        partition_id = 2
-    else:
-        partition_id = 1
+    raw_partition_id = context.node_config.get("partition-id", "unknown")
+    # Randomly assign partition for evaluations as well
+    partition_id = random.choice([0, 1, 2])
 
     logging.info(
         f"[{federation}] Client '{raw_partition_id}' (partition {partition_id}) - "

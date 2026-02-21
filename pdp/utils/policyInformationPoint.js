@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 function _readData() {
-  const file = path.join(__dirname, '..', 'sample_data', 'nodes.json');
+  const file = path.join(__dirname, '..', 'pip', 'nodes.json');
   const raw = fs.readFileSync(file, 'utf8');
   return JSON.parse(raw || '{}');
 }

@@ -1,37 +1,83 @@
-# flwr-abac: A Flower / PyTorch app
+# flwr-abac: Example apps
 
-## Install dependencies and project
+This folder contains example code showing how to run Flower-based applications with
+an access-control integration (PEP/PDP) and simple PyTorch models. The focus is a
+medical demo under `examples/medical` that demonstrates:
 
-The dependencies are listed in the `pyproject.toml` and you can install them as follows:
+- a `ServerApp` that uses a custom Grid strategy with PEP-driven filtering
+- a `ClientApp` that trains/evaluates a small dense classifier on partitioned CSVs
+- helper scripts to generate keys, derive node IDs, and register SuperNodes
+
+## Quick setup
+
+Install the example dependencies from this directory (the `pyproject.toml` lists the
+required packages):
 
 ```bash
 pip install -e .
 ```
 
-> **Tip:** Your `pyproject.toml` file can define more than just the dependencies of your Flower app. You can also use it to specify hyperparameters for your runs and control which Flower Runtime is used. By default, it uses the Simulation Runtime, but you can switch to the Deployment Runtime when needed.
-> Learn more in the [TOML configuration guide](https://flower.ai/docs/framework/how-to-configure-pyproject-toml.html).
-
-## Run with the Simulation Engine
-
-In the `flwr-abac` directory, use `flwr run` to run a local simulation:
+Then run the app (simulation runtime) from this directory:
 
 ```bash
 flwr run .
 ```
 
-Refer to the [How to Run Simulations](https://flower.ai/docs/framework/how-to-run-simulations.html) guide in the documentation for advice on how to optimize your simulations.
+## What is in this folder
 
-## Run with the Deployment Engine
+- `pyproject.toml` — example app metadata and default `tool.flwr` config used when
+  running `flwr run .` (federation names, default hyperparameters).
+- `medical/` — a small end-to-end example demonstrating a federated training
+  scenario with access control. See next section for details.
 
-Follow this [how-to guide](https://flower.ai/docs/framework/how-to-run-flower-with-deployment-engine.html) to run the same app in this example but with Flower's Deployment Engine. After that, you might be interested in setting up [secure TLS-enabled communications](https://flower.ai/docs/framework/how-to-enable-tls-connections.html) and [SuperNode authentication](https://flower.ai/docs/framework/how-to-authenticate-supernodes.html) in your federation.
+## `examples/medical` overview
 
-You can run Flower on Docker too! Check out the [Flower with Docker](https://flower.ai/docs/framework/docker/index.html) documentation.
+- `server_app.py` — `ServerApp` that builds a global `DenseClassifier` and starts
+  federation training using a custom Grid strategy (`FedAvgGridWithFilter` or
+  `FedMAPWithFilter`) which delegates authorization decisions to an external
+  Policy Enforcement Point (PEP).
+- `client_app.py` — `ClientApp` implementing `@train` and `@evaluate` handlers.
+  It loads a partitioned CSV dataset, applies local training/evaluation, and
+  returns numeric metrics and model parameters via Flower `ArrayRecord`/`MetricRecord`.
+- `task.py` — dataset loading, model definition (`DenseClassifier`), training
+  and evaluation helper functions used by the client and server apps.
+- `generate_node_keys.sh` — generates ED25519 keypairs for example nodes.
+- `get_node_ids.py` — derives consistent numeric node IDs from public keys
+  (prints a YAML snippet you can add to a `node_registry` for policies).
+- `access_control/` — small PEP client + validators that call an external PDP
+  endpoint to decide which nodes may train/evaluate. Aggregation strategy
+  implementations (`FedAvgGridWithFilter`, `FedMAPWithFilter`) are provided in
+  the top-level `aggregation-strategies` package and imported by the example
+  server (see `/workspace/aggregation-strategies`).
+- `test_data/` — partitioned CSVs used by the demo clients (partition_0.csv, ...).
 
-## Resources
+Notes:
+- `server_app.py` currently constructs an `ExternalAccessControlValidator` which
+  uses `PolicyEnforcementPoint` to contact an external PDP. The default PDP URL
+  is set in `access_control/policy_enforcement_point.py` (update it for your PDP).
+- `task.py` expects partition CSVs. The local demo ships `examples/medical/test_data`.
+  If you run the app from a different working directory, ensure `task.load_adult_data`
+  points to the correct path or copy partition CSVs to the path expected by the code.
 
-- Flower website: [flower.ai](https://flower.ai/)
-- Check the documentation: [flower.ai/docs](https://flower.ai/docs/)
-- Give Flower a ⭐️ on GitHub: [GitHub](https://github.com/adap/flower)
-- Join the Flower community!
-  - [Flower Slack](https://flower.ai/join-slack/)
-  - [Flower Discuss](https://discuss.flower.ai/)
+## Quick run (medical demo)
+
+1. See the Flower documentation for how to authenticate and register SuperNodes:
+
+   https://flower.ai/docs/framework/how-to-authenticate-supernodes.html
+
+2. Run the example app (from `examples/`):
+
+```bash
+flwr run .
+```
+
+## Troubleshooting & notes
+
+- If the PEP/PDP is not available the example validators default to "fail-open"
+  in many places to allow local testing; inspect `examples/medical/access_control`.
+- Adjust federation-specific settings (e.g. `num-server-rounds`, `local-epochs`,
+  `fraction-train`) in `pyproject.toml` under `tool.flwr.app.config`.
+
+If you want, I can (a) copy partition CSV paths into the locations expected by
+`task.py`, (b) run a short local simulation, or (c) further expand the README with
+examples of `tool.flwr` config overrides.

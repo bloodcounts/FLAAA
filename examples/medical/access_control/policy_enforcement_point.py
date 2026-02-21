@@ -32,7 +32,7 @@ class PolicyEnforcementPoint:
         """
         query = parse.urlencode(params)
         url = f"{self.BASE_URL}?{query}"
-        print(f"PEP: Calling PDP>>>>>>>>>>> at {url}")
+   
         try:
             req = request.Request(url, method="GET")
             with request.urlopen(req, timeout=self.timeout_seconds) as resp:

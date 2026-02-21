@@ -3,7 +3,7 @@ version: '3.8'
 services:
   pytorch-gpu:
     image: pytorch/pytorch:latest
-    container_name: pytorch-container
+    container_name: flaaa
     runtime: nvidia
     deploy:
       resources:

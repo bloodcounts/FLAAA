@@ -1,3 +1,1 @@
 flwr>=Flower 1.25.0
-grpcio>=1.60.0
-protobuf>=4.25.0

@@ -17,7 +17,7 @@ This SuperLink extends the standard Flower SuperLink with:
 ┌─────────────┐         ┌──────────────────┐         ┌─────────────┐
 │   Client    │────────▶│  Custom Fleet    │────────▶│  External   │
 │   Nodes     │         │    Servicer      │         │     PDP     │
-└─────────────┘         │   (with PEP)     │         │  (Luas-PDP) │
+└─────────────┘         │   (with PEP)     │         │             │
                         └──────────────────┘         └─────────────┘
                                │
                                ▼
@@ -256,9 +256,6 @@ If you see database locked errors:
 - **[pdp](../pdp/)**: Luas Policy Decision Point
 - **[example](../example/)**: Full working example
 
-## License
-
-Apache License 2.0
 
 ## Contributing
 

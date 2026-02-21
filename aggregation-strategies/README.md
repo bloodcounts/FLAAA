@@ -66,6 +66,4 @@ Federated MAP strategy with ICNN prior and external PEP access control. Supports
 - PyTorch >= 2.0.0
 - NumPy >= 1.24.0
 
-## License
-
-Apache-2.0
+<!-- License information consolidated at repository root LICENSE -->
