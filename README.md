@@ -1,4 +1,4 @@
-# FLAaa Example Repository
+# FLAAA
 
 This repository contains example code and helper packages for federated
 learning experiments and access-control integrations used by the FLAAA project.
@@ -114,13 +114,6 @@ Technical summary
 - Aggregation: governance filtering is performed at orchestration time; the
   repository demonstrates integration with FedMAP (personalised FL) but the
   AAA layer is algorithm-agnostic (see `aggregation-strategies/`).
-
-Evaluation highlights
----------------------
-
-- Demonstrated with the BloodCounts! consortium and simulation of INTERVAL
-  data (54,446 samples across 25 centres). Federated training improved mean
-  ROC AUC and matched centralised performance while enforcing governance.
 
 Repository mapping
 ------------------
