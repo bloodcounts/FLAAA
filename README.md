@@ -1,4 +1,4 @@
-# FLAAA
+# FLA³
 
 This repository contains example code and helper packages for federated
 learning experiments and access-control integrations used by the FLAAA project.
