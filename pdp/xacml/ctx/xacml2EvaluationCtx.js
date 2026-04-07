@@ -14,8 +14,29 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 const BasicEvaluationCtx = require("./basicEvaluationCtx");
 const XACMLConstants = require("../XACMLConstants");
 
+var attributesSet;
+var currentDate;
+var currentTime;
+var currentDateTime;
+
+var RESOURCE_ID = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
+var RESOURCE_SCOPE = "urn:oasis:names:tc:xacml:1.0:resource:scope";
+var SCOPE_IMMEDIATE = 0;
+var SCOPE_CHILDREN = 1;
+var SCOPE_DESCENDANTS = 2;
+
+// Dummy Attribute class for setResourceId
+function Attribute(id, issuer, issueInstant, value, version) {
+  this.id = id;
+  this.issuer = issuer;
+  this.issueInstant = issueInstant;
+  this.value = value;
+  this.version = version;
+}
+
 class XACML2EvaluationCtx extends BasicEvaluationCtx {
   constructor(requestCtx, pdpConfig) {
+    super(); // Call parent constructor first
     if (requestCtx !== null && pdpConfig !== null) {
       this.pdpConfig = pdpConfig;
       this.requestCtx = requestCtx;
@@ -120,26 +141,27 @@ class XACML2EvaluationCtx extends BasicEvaluationCtx {
     attrSet.push(new Attribute(attr.getId(), attr.getIssuer(), attr.getIssueInstant(),
       resourceId, XACMLConstants.XACML_VERSION_2_0));
   }
-}
-const mapAttributes = function (inputs, output) {
-  for (var i = 0; i < inputs.length; i++) {
-    var attr = inputs[i];
-    var id = attr.getId();
-    if (output[id] != null) {
-      var set = [];
-      set = output[id];
-      set.push(attr);
-    } else {
 
-      var set = [];
-      set.push(attr);
-      output[id] = set;
-      if (id.indexOf('resource') > -1) {
-        this.resourceMap[id] = set;
-      } else if (id.indexOf('action') > -1) {
-        this.actionMap[id] = set;
+  mapAttributes(inputs, output) {
+    for (var i = 0; i < inputs.length; i++) {
+      var attr = inputs[i];
+      var id = attr.getId();
+      if (output[id] != null) {
+        var set = [];
+        set = output[id];
+        set.push(attr);
+      } else {
+
+        var set = [];
+        set.push(attr);
+        output[id] = set;
+        if (id.indexOf('resource') > -1) {
+          this.resourceMap[id] = set;
+        } else if (id.indexOf('action') > -1) {
+          this.actionMap[id] = set;
+        }
       }
     }
   }
-};
+}
 module.exports = XACML2EvaluationCtx;

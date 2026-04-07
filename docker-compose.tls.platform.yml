@@ -1,0 +1,104 @@
+services:
+
+  cert-init:
+    image: alpine:3
+    volumes:
+      - ./scripts:/scripts:ro
+      - ./certificates:/certs
+      - ./pdp/certs:/pdp-certs
+    environment:
+      - CERT_DIR=/certs
+      - PDP_CERT_DIR=/pdp-certs
+    command: >
+      sh -c "
+        if [ ! -f /certs/ca.crt ]; then
+          apk add --no-cache bash openssl;
+          bash /scripts/generate_certs.sh;
+        else
+          echo 'Certificates already present, skipping generation.';
+        fi
+      "
+    restart: "no"
+
+  pdp:
+    build: ./pdp
+    ports:
+      - "8080:8080"
+    environment:
+      - PDP_PORT=8080
+      - LOG_LEVEL=info
+      - NODE_ENV=production
+    volumes:
+      - ./pdp/logs:/app/logs
+      - ./pdp/certs:/app/certs:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    depends_on:
+      cert-init:
+        condition: service_completed_successfully
+
+  superlink:
+    build: ./superlink
+    ports:
+      - "9091:9091"
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      - PDP_DECISION_URL=http://pdp:8080/getDecision
+    volumes:
+      - superlink-data:/app/.flwr
+      - ./certificates:/app/certificates:ro
+    command: >
+      python start_custom_superlink.py
+        --ssl-certfile /app/certificates/server.pem
+        --ssl-keyfile /app/certificates/server.key
+        --ssl-ca-certfile /app/certificates/ca.crt
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 9091)); s.close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  node-registration:
+    image: python:3.11-alpine
+    volumes:
+      - ./examples:/examples:ro
+      - ./examples/flwr-config.toml:/root/.flwr/config.toml:ro
+      - ./superlink:/superlink:ro
+      - ./superlink-data:/app/.flwr
+      - ./certificates:/certificates:ro
+      - ./pdp/sample_data:/pdp-sample-data
+    environment:
+      - GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=/certificates/ca.crt
+      - FLWR_FLEET_API_ADDRESS=superlink:9091
+    working_dir: /examples
+    command: >
+      sh -c "
+        apk add --no-cache bash openssl git python3 py3-pip openssh &&
+        pip install cryptography 'flwr[cli]' &&
+        cd medical &&
+        echo '==> Generating node keys...' &&
+        bash generate_node_keys.sh &&
+        echo '==> Deriving node IDs...' &&
+        python get_node_ids.py &&
+        echo '==> Registering nodes with SuperLink...' &&
+        bash /examples/registernode.sh &&
+        echo '==> Updating PDP node registry...' &&
+        python update_pdp_nodes.py /pdp-sample-data/node_ids.json /pdp-sample-data/nodes.json &&
+        echo '✓ Node registration automation completed successfully'
+      "
+    restart: "no"
+    depends_on:
+      superlink:
+        condition: service_healthy
+      cert-init:
+        condition: service_completed_successfully
+
+volumes:
+  superlink-data:

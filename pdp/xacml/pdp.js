@@ -49,7 +49,7 @@ PDP.prototype.evaluateCtx = function (context) {
     let evaluationCtxSet;
     const multipleCtxResult = context.getMultipleEvaluationCtx();
     if (multipleCtxResult.isIndeterminate()) {
-      return new ResponseCtx(ResultFactory.getFactory().
+      return new ResponseCtx(ResultFactory.prototype.getFactory().
         getResult(AbstractResult.DECISION_INDETERMINATE, multipleCtxResult.getStatus(), context));
     } else {
       evaluationCtxSet = multipleCtxResult.getEvaluationCtxSet();

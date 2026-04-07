@@ -1,0 +1,29 @@
+/health:
+  get:
+    summary: Health check
+    description: Returns the current readiness status of the PDP service.
+    tags: [System]
+    responses:
+      200:
+        description: PDP is ready
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: ready
+                port:
+                  type: integer
+                  example: 3000
+      503:
+        description: PDP is still initialising
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: initializing

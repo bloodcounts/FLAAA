@@ -29,7 +29,7 @@ PolicyReference.prototype.init = function (reference, policyType, finder,
 PolicyReference.prototype.initWithConstraints = function (reference, policyType, constraints,
   finder, parentMetaData) {
   if ((policyType != POLICY_REFERENCE) && (policyType != POLICYSET_REFERENCE))
-    throw new Error("Input policyType is not a" + "valid value");
+    throw new Error("Input policyType is not a valid value");
 
   this.reference = reference;
   this.policyType = policyType;
@@ -104,7 +104,7 @@ PolicyReference.prototype.POLICY_REFERENCE = POLICY_REFERENCE;
 PolicyReference.prototype.POLICYSET_REFERENCE = POLICYSET_REFERENCE;
 
 PolicyReference.prototype.resolvePolicy = function () {
-  if (finder == null) {
+  if (this.finder == null) {
 
     console.warn("PolicyReference with id " + this.reference
       + " was queried but was " + "not configured with a PolicyFinder");
@@ -113,8 +113,8 @@ PolicyReference.prototype.resolvePolicy = function () {
     throw new Error("couldn't find the policy with " + "a null finder");
   }
 
-  const pfr = finder.findPolicy(reference, policyType, constraints,
-    parentMetaData);
+  const pfr = this.finder.findPolicy(this.reference, this.policyType, this.constraints,
+    this.parentMetaData);
 
   if (pfr.notApplicable())
     throw new Error("couldn't resolve the policy");

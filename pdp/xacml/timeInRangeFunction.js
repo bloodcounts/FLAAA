@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 var extend = require('./utils/extend');
 var FunctionBase = require('./cond/functionBase');
 var TimeAttribute = require("./attr/timeAttribute");
-var BooleanAttribute = require("./att/booleanAttribute");
+var BooleanAttribute = require("./attr/booleanAttribute");
 var NAME = "http://research.sun.com/projects/xacml/names/function#time-in-range";
 
 

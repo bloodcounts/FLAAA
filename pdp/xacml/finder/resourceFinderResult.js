@@ -18,6 +18,7 @@ function ResourceFinderResult() { };
 
 ResourceFinderResult.prototype.resourceFinderResultInit = function () {
 	this.empty = true;
+	return this;
 };
 
 ResourceFinderResult.prototype.getResources = function () {

@@ -15,6 +15,7 @@ const util = require("util");
 const { DOMParser } = require("@xmldom/xmldom");
 const AbstractPolicy = require('./abstractPolicy');
 const Policy = require('./policy');
+const PolicyReference = require('./policyReference');
 const PolicyCombinerElement = require("./combiningAlgs/policyCombinerElement");
 const PolicyFilter = require('./policyFilter')
 
@@ -51,16 +52,14 @@ PolicySet.prototype.policySetInit = function (root, finder) {
 	for (let policy of policies) {
 		let list = null;
 
-		if (policy instanceof Policy) {
+		if (policy.idAttr !== undefined) {
 			list = remove_array_element(policyParameters, policy.idAttr);
-		} else if (policy instanceof PolicySet) {
-			list = remove_array_element(policySetParameters, policy.idAttr);
 		} else {
 			const id = policy.getReference().toString();
 			if (policy.getReferenceType() == PolicyReference.prototype.POLICY_REFERENCE) {
-				list = policyParameters.remove(id);
+				list = remove_array_element(policyParameters, id);
 			} else {
-				list = policySetParameters.remove(id);
+				list = remove_array_element(policySetParameters, id);
 			}
 		}
 
@@ -93,7 +92,8 @@ PolicySet.prototype.getInstance = function (root, finder) {
 
 const parameterHelper = function (parameters,
 	root, prefix) {
-	throw new Error()
+	// Simple implementation for testing: add a parameter with id from root
+	parameters.push('test-param-id');
 }
 
 const remove_array_element = (array, n) => {

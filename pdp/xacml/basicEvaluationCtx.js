@@ -33,6 +33,7 @@ var environmentMap;
 var subjectMap;
 var resourceId;
 var scope;
+var attributesSet;
 
 
 function BasicEvaluationCtx() { };

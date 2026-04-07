@@ -80,10 +80,10 @@ To verify the SuperLink is running:
 
 ```bash
 # Check if Fleet API is accessible
-grpcurl -plaintext localhost:9092 list
+grpcurl -plaintext localhost:9092 list flwr.proto.Fleet
 
 # Check if Control API is accessible
-grpcurl -plaintext localhost:9093 list
+grpcurl -plaintext localhost:9093 list flwr.proto.Control
 ```
 
 ## Troubleshooting

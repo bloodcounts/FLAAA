@@ -134,7 +134,7 @@ Rule.prototype.evaluate = function (context) {
     }
 
     return ResultFactory.prototype.getFactory().getResult(Result.prototype.DECISION_INDETERMINATE,
-      result.getStatus(), context);
+      result.status, context);
   } else {
 
     if (result.value) {

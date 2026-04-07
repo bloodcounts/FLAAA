@@ -15,7 +15,9 @@ from flwr.supercore.ffs import FfsFactory
 from flwr.supercore.object_store import ObjectStoreFactory
 from flwr.superlink.federation import NoOpFederationManager
 from flwr.proto.fleet_pb2_grpc import add_FleetServicer_to_server
+from flwr.proto import fleet_pb2
 from flwr.common.grpc import generic_create_grpc_server
+from grpc_reflection.v1alpha import reflection
 from flwr.common import GRPC_MAX_MESSAGE_LENGTH
 from flwr.common.constant import (
     ISOLATION_MODE_SUBPROCESS,
@@ -25,7 +27,10 @@ from flwr.common.constant import (
 )
 
 # Control API imports
-from flwr.superlink. servicer. control import run_control_api_grpc
+from flwr.proto.control_pb2_grpc import add_ControlServicer_to_server
+from flwr.proto import control_pb2
+from flwr.superlink.servicer.control.control_servicer import ControlServicer
+from flwr.superlink.servicer.control.control_account_auth_interceptor import ControlAccountAuthInterceptor
 from flwr.superlink.auth_plugin import (
     NoOpControlAuthnPlugin,
     NoOpControlAuthzPlugin,
@@ -93,6 +98,14 @@ def start_custom_superlink(
         max_message_length=GRPC_MAX_MESSAGE_LENGTH,
         certificates=certificates,
     )
+
+    # Enable gRPC server reflection (allows grpcurl / grpc-ui introspection)
+    service_names = (
+        fleet_pb2.DESCRIPTOR.services_by_name["Fleet"].full_name,
+        reflection.SERVICE_NAME,
+    )
+    reflection.enable_server_reflection(service_names, fleet_grpc_server)
+
     fleet_grpc_server.start()
     
     log(INFO, "=" * 80)
@@ -123,17 +136,43 @@ def start_custom_superlink(
         verify_tls_cert=True,
     )
     
-    control_grpc_server = run_control_api_grpc(
-        address=control_api_address,
-        state_factory=state_factory,
-        ffs_factory=ffs_factory,
-        objectstore_factory=objectstore_factory,
+    control_servicer_kwargs = {
+        "linkstate_factory": state_factory,
+        "ffs_factory": ffs_factory,
+        "objectstore_factory": objectstore_factory,
+        "authn_plugin": authn_plugin,
+        "artifact_provider": None,
+        "fleet_api_type": None,
+    }
+    # Flower ControlServicer signatures differ across versions.
+    # Newer releases removed `is_simulation`.
+    try:
+        control_servicer = ControlServicer(
+            **control_servicer_kwargs,
+            is_simulation=False,
+        )
+    except TypeError as exc:
+        if "is_simulation" not in str(exc):
+            raise
+        control_servicer = ControlServicer(**control_servicer_kwargs)
+    control_interceptors = [ControlAccountAuthInterceptor(authn_plugin, authz_plugin)]
+    control_grpc_server = generic_create_grpc_server(
+        servicer_and_add_fn=(control_servicer, add_ControlServicer_to_server),
+        server_address=control_api_address,
+        max_message_length=GRPC_MAX_MESSAGE_LENGTH,
         certificates=certificates,
-        authn_plugin=authn_plugin,
-        authz_plugin=authz_plugin,
-        is_simulation=False,
+        interceptors=control_interceptors,
     )
-    
+
+    # Enable gRPC server reflection on Control API
+    control_service_names = (
+        control_pb2.DESCRIPTOR.services_by_name["Control"].full_name,
+        reflection.SERVICE_NAME,
+    )
+    reflection.enable_server_reflection(control_service_names, control_grpc_server)
+
+    control_grpc_server.start()
+
     log(INFO, "Control API started")
     
     # ===== START SUPEREXEC FOR SERVERAPP =====

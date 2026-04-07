@@ -1,0 +1,75 @@
+/getDecision:
+  get:
+    summary: Evaluate an XACML policy decision
+    description: >
+      Evaluates the applicable XACML policy and returns a Permit, Deny,
+      NotApplicable, or Indeterminate decision for the given action and context.
+    tags: [Decision]
+    parameters:
+      - in: query
+        name: action
+        required: true
+        schema:
+          type: string
+          enum:
+            - task_approval
+            - membership_validation
+            - train
+            - evaluate
+        description: The action type to evaluate
+      - in: query
+        name: task_id
+        required: true
+        schema:
+          type: string
+          example: medical
+        description: The federated learning task identifier
+      - in: query
+        name: node_id
+        required: false
+        schema:
+          type: string
+          example: "15692499009958989137"
+        description: The SuperNode identifier (required for membership_validation)
+    responses:
+      200:
+        description: Decision evaluated successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decision:
+                  type: object
+                  properties:
+                    decision:
+                      type: string
+                      enum: [Permit, Deny, NotApplicable, Indeterminate]
+                      example: Permit
+                    obligations:
+                      type: string
+                      example: "[]"
+                    attributes:
+                      type: string
+                      example: "[]"
+                    reason:
+                      type: array
+                      items:
+                        type: string
+                      nullable: true
+                    message:
+                      type: string
+                      nullable: true
+      400:
+        description: Missing or invalid query parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                details:
+                  type: string
+      503:
+        description: PDP not yet initialised

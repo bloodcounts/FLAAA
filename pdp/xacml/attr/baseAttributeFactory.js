@@ -34,6 +34,10 @@ BaseAttributeFactory.prototype.createValue1 = function (root) {
 	return this.createValue3(root, node);
 };
 
+BaseAttributeFactory.prototype.createValue = function (root) {
+	return this.createValue1(root);
+};
+
 BaseAttributeFactory.prototype.createValue2 = function (root, dataType) {
 	return this.createValue3(root, dataType);
 };

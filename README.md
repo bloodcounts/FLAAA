@@ -24,50 +24,72 @@ This repo demonstrates:
 - How to use and extend aggregation strategies provided in
   `aggregation-strategies/` from multiple projects.
 
-Quick start (examples)
-----------------------
+Quick start
+-----------
 
-1. Install the example package dependencies (from the `examples/` directory):
+### Prerequisites
+
+- Docker and Docker Compose v2.1+
+- `make` (included on macOS and most Linux distros)
+- Ports 8080, 9091, 9092, 9093 available
+
+### 1. Start the platform (SuperLink + PDP + TLS certs)
 
 ```bash
-cd examples
-pip install -e .
+make up
 ```
 
-2. Run the included example (simulation runtime):
+This starts the platform services and a PyTorch client container.
+On macOS (no NVIDIA runtime), the client runs in CPU-only mode automatically.
+
+### 2. Run federated training
 
 ```bash
-flwr run .
+make run-docker
 ```
 
-Docker
-------
+Runs a 2-round FL simulation (Adult Census Income dataset) with 2 simulated
+SuperNodes inside the client container.
 
-A `docker-compose.yml` is provided at the repository root that starts a
-GPU-enabled container named `pytorch-gpu` (container name `flaaa`). The
-service mounts the repository at `/workspace` so you can run examples from
-inside the container.
-
-Requirements:
-
-- Docker installed on the host
-- NVIDIA drivers and the NVIDIA Container Toolkit if you intend to use the GPU
-
-Common commands:
+### 3. Tail logs
 
 ```bash
-# Start in foreground (build if needed)
-docker compose up --build
+make run-docker-logs
+```
 
-# Start in background
+### Common commands
+
+```bash
+make help            # Show all available targets
+make up              # Start everything (platform + client)
+make up-platform     # Start only SuperLink + PDP
+make down            # Stop everything
+make fresh           # Full teardown + rebuild + start
+make clean           # Remove everything including volumes and images
+make shell-client    # Shell into the PyTorch container
+make shell-superlink # Shell into the SuperLink container
+make test            # Run all tests (unit + conformance)
+make logs            # Tail platform logs
+```
+
+### Without Make
+
+```bash
+# Start platform with TLS
+docker compose -f docker-compose.tls.platform.yml up --build -d
+
+# Start client (GPU)
 docker compose up -d
 
-# Open an interactive shell inside the service
-docker compose run --rm pytorch-gpu bash
-```
+# Start client (no GPU / macOS)
+docker run -d --name pytorch-container \
+  -v $(pwd):/workspace -w /workspace \
+  --shm-size 2g pytorch/pytorch:latest sleep infinity
 
-If you don't have GPUs available, run the examples locally in your Python
-environment or modify `docker-compose.yml` to use a non-GPU image.
+# Run training
+docker exec -w /workspace/examples pytorch-container \
+  bash -c "pip install -e . 'flwr[simulation]' && flwr run ."
+```
 
 
 Further reading
@@ -129,11 +151,10 @@ Repository mapping
 Architecture diagram
 --------------------
 
-![FLA^3 architecture](figures/flaaa.svg)
+![FLA^3 architecture](docs/flaaa.svg)
 
 License
 -------
 
 This repository is licensed under the Apache License 2.0. For the full
 license text, see the Apache website: https://www.apache.org/licenses/LICENSE-2.0
-

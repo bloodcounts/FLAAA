@@ -1,94 +1,170 @@
-// Build XACML request XML strings from query parameters.
-// Each function returns a string containing the XML request, or null if required params are missing.
+// Builds XACML request XML strings from query parameters.
 
-function escapeXml(str) {
-  if (str === undefined || str === null) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-const pip = require('./policyInformationPoint');
-
-function buildTaskApprovalRequest(params) {
-  const taskId = params.task_id || params.taskId || params.task || params.id;
-  if (!taskId) return null;
-  const info = pip.getTaskPolicyInfo(taskId);
-  if (!info) return null;
-  const action = 'task-authorization';
-  const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
-  const now = info.current_dateTime || info.currentDateTime || new Date().toISOString();
-  // Build the exact requested template: action, task_id, task_expires, and current-dateTime
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">\n\n  <!-- Action -->\n  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">\n    <Attribute AttributeId="action" IncludeInResult="false">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(action)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n  <!-- Resource: task-scoped federation -->\n  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">\n    <Attribute AttributeId="task_id" IncludeInResult="false">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(taskId)}</AttributeValue>\n    </Attribute>\n\n    <!-- Must be later than current-dateTime -->\n    <Attribute AttributeId="task_expires" IncludeInResult="false">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(taskExpires)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n  <!-- Environment -->\n  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">\n    <Attribute AttributeId="current-dateTime" IncludeInResult="false">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(now)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n</Request>`;
-}
-
-function buildMembershipValidationRequest(params) {
-  // Expected query params: task_id, task_expires, node_id, is_member_of_task, task_membership_expires
-  // Example:
-  // curl 'http://localhost:3000/getDecision?action=membership_validation&task_id=medical&task_expires=2026-12-31T23:59:59Z&node_id=15692499009958989137&is_member_of_task=true&task_membership_expires=2026-12-31T23:59:59Z'
-  const nodeId = params.node_id || params.nodeId || params.node;
-  const taskId = params.task_id || params.taskId || params.task || params.id;
-  if (!nodeId || !taskId) return null;
-  const info = pip.getMembershipInfo(taskId, nodeId);
-  if (!info) return null;
-  const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
-  const isMember = info.isMember || info.is_member_of_task || 'false';
-  const taskMembershipExpires = info.taskMembershipExpires || info.task_membership_expires || '2026-12-31T23:59:59Z';
-  const action = 'node-activation';
-  const now = info.current_dateTime || info.currentDateTime || new Date().toISOString();
-
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">\n\n  <!-- Action: Node Activation -->\n  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">\n    <Attribute AttributeId="action">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(action)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n  <!-- Resource: Task (task-scoped federation) -->\n  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">\n    <Attribute AttributeId="task_id">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(taskId)}</AttributeValue>\n    </Attribute>\n\n    <!-- Must be strictly greater than current-dateTime -->\n    <Attribute AttributeId="task_expires">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(taskExpires)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n  <!-- Subject: Node (task-scoped membership) -->\n  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">\n\n    <Attribute AttributeId="node_id">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(nodeId)}</AttributeValue>\n    </Attribute>\n\n    <Attribute AttributeId="is_member_of_task">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">${escapeXml(isMember)}</AttributeValue>\n    </Attribute>\n\n    <!-- Must be strictly greater than current-dateTime -->\n    <Attribute AttributeId="task_membership_expires">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(taskMembershipExpires)}</AttributeValue>\n    </Attribute>\n\n  </Attributes>\n\n  <!-- Environment: Current DateTime -->\n  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">\n    <Attribute AttributeId="current-dateTime">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(now)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n</Request>`;
-}
-
-function buildMembershipTypeRequest(params) {
-  const taskId = params.task_id || params.taskId || params.task || params.id;
-  const nodeId = params.node_id || params.nodeId || params.node;
-  if (!taskId) return null;
-  let info = null;
-  if (nodeId) {
-    info = pip.getMembershipInfo(taskId, nodeId);
+class DecisionParamsBuilder {
+  constructor(pip) {
+    this.pip = pip;
   }
-  if (!info) {
-    info = pip.getMembershipTypeInfo(taskId);
+
+  static #escapeXml(str) {
+    if (str === undefined || str === null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
   }
-  if (!info) return null;
-  const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
-  const isMember = info.isMember || info.is_member_of_task || 'true';
-  const taskMembershipExpires = info.taskMembershipExpires || info.task_membership_expires || '2026-12-31T23:59:59Z';
-  const taskRole = info.taskRole || info.task_role || 'participant';
-  let action = params.action;
 
-  const now = info.current_date_time || info.currentDateTime || info.current_dateTime || info.currentDateTime || new Date().toISOString();
+  #buildTaskApproval(params) {
+    const taskId = params.task_id || params.taskId || params.task || params.id;
+    if (!taskId) return null;
+    const info = this.pip.getTaskPolicyInfo(taskId);
+    if (!info) return null;
+    const action = 'task-authorization';
+    const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
+    const now = info.current_date_time || info.currentDateTime || new Date().toISOString();
+    const x = DecisionParamsBuilder.#escapeXml;
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute AttributeId="action" IncludeInResult="false">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(action)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">
+    <Attribute AttributeId="task_id" IncludeInResult="false">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(taskId)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_expires" IncludeInResult="false">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(taskExpires)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">
+    <Attribute AttributeId="current-dateTime" IncludeInResult="false">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(now)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+</Request>`;
+  }
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">\n\n  <!-- Action: ${action === 'train' ? 'Train' : 'Evaluate'} -->\n  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">\n    <Attribute AttributeId="action">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(action)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n  <!-- Resource: Task -->\n  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">\n    <Attribute AttributeId="task_id">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(taskId)}</AttributeValue>\n    </Attribute>\n\n    <!-- Must be strictly greater than current-dateTime -->\n    <Attribute AttributeId="task_expires">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(taskExpires)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n  <!-- Subject: Node -->\n  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">\n\n    <Attribute AttributeId="is_member_of_task">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">${escapeXml(isMember)}</AttributeValue>\n    </Attribute>\n\n    <!-- Must be strictly greater than current-dateTime -->\n    <Attribute AttributeId="task_membership_expires">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(taskMembershipExpires)}</AttributeValue>\n    </Attribute>\n\n    <!-- participant can train/aggregate -->\n    <Attribute AttributeId="task_role">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${escapeXml(taskRole)}</AttributeValue>\n    </Attribute>\n\n  </Attributes>\n\n  <!-- Environment -->\n  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">\n    <Attribute AttributeId="current-dateTime">\n      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${escapeXml(now)}</AttributeValue>\n    </Attribute>\n  </Attributes>\n\n</Request>`;
+  #buildMembershipValidation(params) {
+    const nodeId = params.node_id || params.nodeId || params.node;
+    const taskId = params.task_id || params.taskId || params.task || params.id;
+    if (!nodeId || !taskId) return null;
+    const info = this.pip.getMembershipInfo(taskId, nodeId);
+    if (!info) return null;
+    const action = 'node-activation';
+    const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
+    const isMember = info.isMember || info.is_member_of_task || 'false';
+    const taskMembershipExpires = info.taskMembershipExpires || info.task_membership_expires || '2026-12-31T23:59:59Z';
+    const now = info.current_date_time || info.currentDateTime || new Date().toISOString();
+    const x = DecisionParamsBuilder.#escapeXml;
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute AttributeId="action">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(action)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">
+    <Attribute AttributeId="task_id">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(taskId)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_expires">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(taskExpires)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+    <Attribute AttributeId="node_id">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(nodeId)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="is_member_of_task">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">${x(isMember)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_membership_expires">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(taskMembershipExpires)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">
+    <Attribute AttributeId="current-dateTime">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(now)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+</Request>`;
+  }
+
+  #buildMembershipType(params) {
+    const taskId = params.task_id || params.taskId || params.task || params.id;
+    const nodeId = params.node_id || params.nodeId || params.node;
+    if (!taskId) return null;
+    const info = nodeId
+      ? this.pip.getMembershipInfo(taskId, nodeId) || this.pip.getMembershipTypeInfo(taskId)
+      : this.pip.getMembershipTypeInfo(taskId);
+    if (!info) return null;
+    const { action } = params;
+    const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
+    const isMember = info.isMember || info.is_member_of_task || 'true';
+    const taskMembershipExpires = info.taskMembershipExpires || info.task_membership_expires || '2026-12-31T23:59:59Z';
+    const taskRole = info.taskRole || info.task_role || 'participant';
+    const now = info.current_date_time || info.currentDateTime || new Date().toISOString();
+    const x = DecisionParamsBuilder.#escapeXml;
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute AttributeId="action">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(action)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:attribute-category:resource">
+    <Attribute AttributeId="task_id">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(taskId)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_expires">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(taskExpires)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+    <Attribute AttributeId="is_member_of_task">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">${x(isMember)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_membership_expires">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(taskMembershipExpires)}</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="task_role">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${x(taskRole)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment">
+    <Attribute AttributeId="current-dateTime">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#dateTime">${x(now)}</AttributeValue>
+    </Attribute>
+  </Attributes>
+</Request>`;
+  }
+
+  build(action, params) {
+    if (!action) return null;
+    switch (String(action).toLowerCase()) {
+      case 'task_approval':
+      case 'task-approval':
+      case 'taks_approval': // backward-compat typo alias
+      case 'taskapproval':
+        return this.#buildTaskApproval(params);
+
+      case 'membership_validation':
+      case 'membership-validation':
+      case 'memebership_validation': // backward-compat typo alias
+      case 'membershipvalidation':
+        return this.#buildMembershipValidation(params);
+
+      case 'train':
+      case 'evaluate':
+        return this.#buildMembershipType(params);
+
+      default:
+        return null;
+    }
+  }
 }
 
-function getRequestXML(action, params) {
-  if (!action) return null;
-  const key = String(action).toLowerCase();
-  switch (key) {
-    case 'task_approval':
-    case 'task-approval':
-    case 'taks_approval':
-    case 'taskapproval':
-      return buildTaskApprovalRequest(params);
-
-    case 'membership_validation':
-    case 'membership-validation':
-    case 'memebership_validation':
-    case 'membershipvalidation':
-      return buildMembershipValidationRequest(params);
-
-    case 'train':
-    case 'evaluate':
-      return buildMembershipTypeRequest(params);
-
-    default:
-      return null;
-  }
-}
-
-module.exports = { getRequestXML };
+module.exports = DecisionParamsBuilder;

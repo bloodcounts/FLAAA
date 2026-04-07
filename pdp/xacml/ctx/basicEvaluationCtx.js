@@ -15,6 +15,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 const TimeAttribute = require("../attr/timeAttribute");
 const DateAttribute = require("../attr/dateAttribute");
 const DateTimeAttribute = require("../attr/dateTimeAttribute");
+const EvaluationResult = require("../cond/evaluationResult");
+const BagAttribute = require("../attr/bagAttribute");
 
 const useCachedEnvValues = false;
 let currentTime
@@ -53,7 +55,7 @@ class BasicEvaluationCtx {
     }
     else {
       const da = new DateAttribute();
-      da.bullshit(new Date(millis))
+      da.dateAttributeInit2(new Date(millis), 0, 0);
       return da
     }
 
@@ -66,21 +68,21 @@ class BasicEvaluationCtx {
     }
     else {
       const dta = new DateTimeAttribute();
-      dta.bullshit(new Date(millis))
+      dta.dateTimeAttributeInit2(new Date(millis), 0, 0, 0);
       return dta
     }
   }
 
   getAttribute (path, type, category,
     contextSelector, xpathVersion) {
-    if (this.pdpConfig.getAttributeFinder() != null) {
+    if (this.pdpConfig && this.pdpConfig.getAttributeFinder() != null) {
       return this.pdpConfig.getAttributeFinder().findAttribute(path, type, this,
         xpathVersion);
     } else {
-      Console.warn("Context tried to invoke AttributeFinder but was " +
+      console.warn("Context tried to invoke AttributeFinder but was " +
         "not configured with one");
 
-      return new EvaluationResult(BagAttribute.createEmptyBag(type));
+      return new EvaluationResult(BagAttribute.prototype.createEmptyBag(type));
     }
   }
 }

@@ -29,7 +29,7 @@ TargetFactory.prototype.getTarget = function (node, metaData) {
 
 
 TargetFactory.prototype.getFactory = function () {
-  if (factoryInstance === null) {
+  if (!factoryInstance) {
     factoryInstance = new TargetFactory();
   }
   return factoryInstance;

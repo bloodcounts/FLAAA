@@ -17,7 +17,7 @@ This SuperLink extends the standard Flower SuperLink with:
 ┌─────────────┐         ┌──────────────────┐         ┌─────────────┐
 │   Client    │────────▶│  Custom Fleet    │────────▶│  External   │
 │   Nodes     │         │    Servicer      │         │     PDP     │
-└─────────────┘         │   (with PEP)     │         │             │
+└─────────────┘         │   (with PEP)     │         │  (Luas-PDP) │
                         └──────────────────┘         └─────────────┘
                                │
                                ▼
@@ -57,6 +57,29 @@ Located in `custom_fleet/config.py`:
 - Manages PDP connection settings
 - Configurable via environment variables
 - Supports both HTTP and gRPC PDPs
+
+## Certificate Setup
+
+Generate a self-signed CA and server certificate for gRPC TLS (Fleet API port 9092, Control API port 9093):
+
+```bash
+# From the FLAAA root
+bash scripts/generate_certs.sh
+```
+
+This writes the files expected by `run.bash`:
+
+```
+certificates/
+├── ca.crt       CA certificate
+├── server.crt   Server certificate (CA-signed)
+├── server.pem   Alias for server.crt
+└── server.key   Server private key
+```
+
+Certificates are gitignored. Generate locally or inject via a secrets manager in CI/CD.
+
+---
 
 ## Installation
 
@@ -256,6 +279,9 @@ If you see database locked errors:
 - **[pdp](../pdp/)**: Luas Policy Decision Point
 - **[example](../example/)**: Full working example
 
+## License
+
+Apache License 2.0
 
 ## Contributing
 

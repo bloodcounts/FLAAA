@@ -6,10 +6,10 @@ from flwr.app import ArrayRecord, ConfigRecord, Context
 from flwr.serverapp import Grid, ServerApp
 from flwr.serverapp.strategy import FedAvg
 
-from flwr_abac.task import DenseClassifier
-from flwr_abac.access_control.validator_pep import ExternalAccessControlValidator
-from flwr_abac.access_control.config import AccessControlConfig
-from aggregation_strategies.strategies import FedAvgGridWithFilter
+from medical.task import DenseClassifier
+from medical.access_control.validator_pep import ExternalAccessControlValidator
+from medical.access_control.config import AccessControlConfig
+from medical.access_control.fedavg_grid_with_filter import FedAvgGridWithFilter
 
 
 # --------------------------------------------------------------------------- #

@@ -54,6 +54,10 @@ const VariableState = function () {
   }
 }
 
+VariableManager.prototype.getDefinition = function (id) {
+  return this.idMap.get(id);
+};
+
 module.exports = VariableManager;
 
 

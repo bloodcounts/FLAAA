@@ -4,12 +4,15 @@ This PEP sends a GET request to an external decision endpoint and
 parses the returned JSON to determine Permit/Deny decisions.
 """
 
+import os
 from typing import Tuple, Dict, Any
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 import json
 from flwr.common.logger import log
 from logging import INFO, WARNING
+
+_DEFAULT_PDP_URL = "https://paler-plenteous-ayanna.ngrok-free.dev/getDecision"
 
 
 class PolicyEnforcementPoint:
@@ -19,8 +22,8 @@ class PolicyEnforcementPoint:
     https://paler-plenteous-ayanna.ngrok-free.dev/getDecision
     """
 
-    def __init__(self, base_url: str = "https://paler-plenteous-ayanna.ngrok-free.dev/getDecision", timeout: int = 5):
-        self.base_url = base_url
+    def __init__(self, base_url: str = None, timeout: int = 5):
+        self.base_url = base_url or os.getenv("PDP_DECISION_URL", _DEFAULT_PDP_URL)
         self.timeout = timeout
 
     def is_task_approved(self, task_id: str) -> Tuple[bool, Dict[str, Any]]:

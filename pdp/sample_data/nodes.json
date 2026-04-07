@@ -1,0 +1,170 @@
+{
+  "tasks": {
+    "medical": {
+      "task_expires": "2027-12-31T23:59:59Z",
+      "task_membership_expires": "2027-12-31T23:59:59Z",
+      "nodes": {
+        "15692499009958989137": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "default": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "8047961519667489677": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "6945599608982704443": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "14297490080498675698": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "11769637452054778078": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "6936337515734412703": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "780049189733297976": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "12046553431277234866": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "5105093197719405631": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "16554597341422707204": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "7521978579011836985": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "10343023006449501927": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "18138614708734713062": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "10451667177716220244": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "17055171128426484152": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "16058546129645577817": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "6479997140085320246": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "14820173196640891648": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "12948781314734626917": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "8407332034759711789": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "13509720385579930375": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "13456237059137578213": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "3215613279297618352": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "7356652293296945940": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "12656990719813576380": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "6396075250792866415": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "10840352780326915868": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "4845050129754151419": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "4607378345331519632": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "12449490466733215071": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        },
+        "10057070650306108557": {
+          "is_member_of_task": true,
+          "task_membership_expires": "2027-12-31T23:59:59Z",
+          "task_role": "participant"
+        }
+      }
+    }
+  }
+}

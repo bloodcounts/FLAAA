@@ -14,7 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 var ResourceFinderResult = require('./resourceFinderResult');
 
-function ResourceFinder() { };
+function ResourceFinder() {
+  this.childModules = [];
+  this.descendantModules = [];
+};
 
 ResourceFinder.prototype.setModules = function (modules) {
   this.allModules = modules;
@@ -30,15 +33,15 @@ ResourceFinder.prototype.setModules = function (modules) {
 };
 
 ResourceFinder.prototype.findChildResources = function (parentResourceId, context) {
-  const childModulesLength = childModules.length;
+  const childModulesLength = this.childModules.length;
   for (let i = 0; i < childModulesLength; i++) {
-    const module = childModules[i];
+    const module = this.childModules[i];
     const result = module.findChildResources(parentResourceId, context);
     if (result != null) {
       return result;
     }
   }
-  return new ResourceFinderResult.resourceFinderResultInit();
+  return new ResourceFinderResult().resourceFinderResultInit();
 };
 
 ResourceFinder.prototype.findDescendantResources = function (parentResourceId, context) {
@@ -49,7 +52,7 @@ ResourceFinder.prototype.findDescendantResources = function (parentResourceId, c
       return result;
     }
   }
-  return new ResourceFinderResult.resourceFinderResultInit();
+  return new ResourceFinderResult().resourceFinderResultInit();
 };
 
 module.exports = ResourceFinder;

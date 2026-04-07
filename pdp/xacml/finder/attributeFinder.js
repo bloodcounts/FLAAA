@@ -87,7 +87,7 @@ AttributeFinder.prototype.findAttribute = function (attributeType, attributeId, 
 };
 
 AttributeFinder.prototype.getModules = function () {
-  return allModules;
+  return this.allModules;
 };
 
 module.exports = AttributeFinder;

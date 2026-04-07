@@ -1,0 +1,206 @@
+const { expect } = require('chai');
+const sinon = require('sinon');
+const DecisionLogger = require('../../utils/decisionLogger');
+
+describe('DecisionLogger', () => {
+  let logger;
+  let mockFs;
+  let mockPino;
+  let mockLogger;
+  let originalEnv;
+
+  beforeEach(() => {
+    // Save original environment
+    originalEnv = { ...process.env };
+
+    // Create mocks
+    mockFs = {
+      existsSync: sinon.stub(),
+      readFileSync: sinon.stub(),
+      mkdirSync: sinon.stub()
+    };
+
+    mockLogger = {
+      info: sinon.stub(),
+      error: sinon.stub(),
+      warn: sinon.stub(),
+      debug: sinon.stub()
+    };
+
+    mockPino = sinon.stub().returns(mockLogger);
+    mockPino.transport = sinon.stub().returns({});
+
+    // Set environment variables for testing
+    process.env.LOG_LEVEL = 'info';
+    process.env.SIGNING_KEY_PATH = '/mock/path/key.pem';
+    process.env.SIGNING_KID = 'test-key';
+    process.env.SIGNING_ALG = 'ES256';
+  });
+
+  afterEach(() => {
+    // Restore environment
+    process.env = originalEnv;
+
+    // Restore any stubs
+    sinon.restore();
+  });
+
+  describe('constructor', () => {
+    it('should create a logger instance', () => {
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+      expect(logger).to.be.an('object');
+      expect(logger.logger).to.equal(mockLogger);
+    });
+
+    it('should create logs directory if it does not exist', () => {
+      mockFs.existsSync.returns(false);
+
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+
+      expect(mockFs.mkdirSync.calledOnce).to.be.true;
+    });
+
+    it('should not create logs directory when it already exists', () => {
+      mockFs.existsSync.returns(true);
+
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+
+      expect(mockFs.mkdirSync.called).to.be.false;
+    });
+
+  describe('logging methods', () => {
+    beforeEach(() => {
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+    });
+
+    it('should have logger methods', () => {
+      expect(logger.logger.info).to.be.a('function');
+      expect(logger.logger.error).to.be.a('function');
+      expect(logger.logger.warn).to.be.a('function');
+      expect(logger.logger.debug).to.be.a('function');
+    });
+
+    it('should log messages', () => {
+      // Test that logger methods are called
+      logger.logger.info('Test info message');
+      logger.logger.error('Test error message');
+      logger.logger.warn('Test warn message');
+      logger.logger.debug('Test debug message');
+
+      expect(mockLogger.info.calledWith('Test info message')).to.be.true;
+      expect(mockLogger.error.calledWith('Test error message')).to.be.true;
+      expect(mockLogger.warn.calledWith('Test warn message')).to.be.true;
+      expect(mockLogger.debug.calledWith('Test debug message')).to.be.true;
+    });
+  });
+
+  describe('signing configuration', () => {
+    beforeEach(() => {
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+    });
+
+    it('should have signing configuration properties', () => {
+      expect(logger.signingKid).to.equal('test-key');
+      expect(logger.signingAlg).to.equal('ES256');
+    });
+
+    it('should use default signing kid when not set', () => {
+      delete process.env.SIGNING_KID;
+      const newLogger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+      expect(newLogger.signingKid).to.equal('pdp-signing-key');
+    });
+
+    it('should use default signing algorithm when not set', () => {
+      delete process.env.SIGNING_ALG;
+      const newLogger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+      expect(newLogger.signingAlg).to.equal('ES256');
+    });
+  });
+
+  describe('signing key loading', () => {
+    it('should load signing key if it exists', () => {
+      mockFs.existsSync.returns(true);
+      mockFs.readFileSync.returns('mock-key-content');
+
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+
+      expect(logger.signingPrivateKeyPem).to.equal('mock-key-content');
+      expect(mockLogger.info.calledOnce).to.be.true;
+    });
+
+    it('should handle missing signing key gracefully', () => {
+      mockFs.existsSync.returns(false);
+
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+
+      expect(logger.signingPrivateKeyPem).to.be.null;
+      expect(mockLogger.warn.calledOnce).to.be.true;
+    });
+
+    it('should handle signing key read errors', () => {
+      mockFs.existsSync.returns(true);
+      mockFs.readFileSync.throws(new Error('Read error'));
+
+      logger = new DecisionLogger({
+        fs: mockFs,
+        pino: mockPino,
+        disableFileTransport: true
+      });
+
+      expect(logger.signingPrivateKeyPem).to.be.null;
+      expect(mockLogger.error.calledOnce).to.be.true;
+    });
+  });
+
+  describe('log file creation', () => {
+    it('should create log files with Pino transport', function(done) {
+      // For this test, we'll use the real logger but with a timeout
+      // to avoid the MaxListenersExceededWarning
+      this.timeout(2000);
+
+      logger = new DecisionLogger();
+
+      // Just wait a bit and ensure no errors were thrown
+      setTimeout(() => {
+        expect(logger.logger).to.exist;
+        done();
+      }, 500);
+    });
+  });
+});

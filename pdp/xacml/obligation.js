@@ -53,15 +53,15 @@ Obligation.prototype.getInstance = function (root) {
   return new Obligation.obligationInit(id, fulfillOn, assignments);
 };
 Obligation.prototype.getId = function () {
-  return id;
+  return this.id;
 };
 
 Obligation.prototype.getFulfillOn = function () {
-  return fulfillOn;
+  return this.fulfillOn;
 };
 
 Obligation.prototype.getAssignments = function () {
-  return assignments;
+  return this.assignments;
 };
 
 /*Encode to XML

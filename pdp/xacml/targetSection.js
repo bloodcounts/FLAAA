@@ -32,7 +32,7 @@ TargetSection.prototype.getInstance = function (root, matchType, metaData) {
     const typeName = TargetMatch.prototype.NAMES[matchType];
 
     if (name === typeName) {
-      groups.add(TargetMatchGroup.prototype.getInstance(child, matchType,
+      groups.push(TargetMatchGroup.prototype.getInstance(child, matchType,
         metaData));
     } else if (name === "Any" + typeName) {
       // in a schema-valid policy, the Any element will always be
@@ -60,7 +60,7 @@ TargetSection.prototype.match = function (context) {
   let firstIndeterminateStatus = null;
 
   // in order for this section to match, one of the groups must match
-  for (let group of matchGroups) {
+  for (let group of this.matchGroups) {
     // get the next group and try matching it
     const result = group.match(context);
 
@@ -80,7 +80,7 @@ TargetSection.prototype.match = function (context) {
   const matchResult = new MatchResult;
 
   if (firstIndeterminateStatus == null) {
-    matchResult.matchResultInit(MatchResult.NO_MATCH);
+    matchResult.matchResultInit(MatchResult.prototype.NO_MATCH);
   }
   else {
     matchResult.setResult(MatchResult.prototype.INDETERMINATE,

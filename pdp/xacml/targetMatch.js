@@ -27,7 +27,8 @@ const ENVIRONMENT = 3;
 const NAMES = ["Subject", "Resource", "Action", "Environment"];
 const status = {
   match: MatchResult.prototype.MATCH,
-  no_match: MatchResult.prototype.NO_MATCH
+  no_match: MatchResult.prototype.NO_MATCH,
+  indeterminate: MatchResult.prototype.INDETERMINATE
 }
 
 function TargetMatch() {}
@@ -148,8 +149,9 @@ TargetMatch.prototype.evaluateMatch = function (value, bags, context) {
   // for (var i = 0; i < bags.length; i++) {
   var result = this._function.evaluate(value, bags, context);
   if (result.indeterminate) {
-    return new MatchResult.setResult(MatchResult.INDETERMINATE,
-      result.getStatus());
+    var matchResult = new MatchResult();
+    matchResult.setResult(status.indeterminate, result.getStatus());
+    return matchResult;
   }
 
   if (result.value) {

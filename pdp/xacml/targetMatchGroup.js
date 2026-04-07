@@ -27,13 +27,13 @@ TargetMatchGroup.prototype.getInstance = function (root, metaData) {
   for (let i = 0; i < children.length(); i++) {
     const child = children[i];
     const name = child.name();
-    const matchName = `${TargetMatch.prototype.NAMES[matchType]} Match`;
+    const matchName = `${TargetMatch.prototype.NAMES[this.matchType]} Match`;
     if (name === matchName) {
-      matches.add(TargetMatch.prototype.getInstance(child, matchType, metaData));
+      matches.push(TargetMatch.prototype.getInstance(child, this.matchType, metaData));
     }
   }
 
-  return new TargetMatchGroup(matches, matchType);
+  return new TargetMatchGroup(matches, this.matchType);
 };
 
 TargetMatchGroup.prototype.match = function (context) {
@@ -41,7 +41,9 @@ TargetMatchGroup.prototype.match = function (context) {
 
   if (this.matches.length === 0) {
     // nothing in target, return match
-    return new MatchResult(MatchResult.MATCH);
+    const matchResult = new MatchResult();
+    matchResult.matchResultInit(MatchResult.prototype.MATCH);
+    return matchResult;
   }
 
   for (let targetMatch of this.matches) {

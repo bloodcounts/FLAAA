@@ -46,8 +46,8 @@ def load_adult_data(client_id, batch_size=64):
     """Load preprocessed Adult Census Income dataset from CSV files."""
     import os
     
-    data_dir = "/workspace/flwr-abac/flwr_abac/test_data"
-    partition_path = os. path.join(data_dir, f"partition_{client_id}.csv")
+    data_dir = os.path.join(os.path.dirname(__file__), "test_data")
+    partition_path = os.path.join(data_dir, f"partition_{client_id}.csv")
     
     if not os.path.exists(partition_path):
         raise FileNotFoundError(f"Partition file not found: {partition_path}")
