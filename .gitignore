@@ -101,5 +101,40 @@ pdp/sample_data/nodes.json
 
 # Training artifacts
 *.pt
+
+# Private datasets and derived patient-level arrays
+data/
+*_data/
+INTERVAL_by_centre/
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.npz
+*.npy
+*.h5
+*.hdf5
+
+# Local models, audit streams, and experiment output
+*.pth
+*.ckpt
+*.jsonl
+checkpoints/
+results/
+artifacts/
+*.db-shm
+*.db-wal
+*.egg-info/
+
+# Flower runtime state
+.flwr/
+
+# Legacy model filenames and generated experiment output
 *. pt
-examples/final_model_default. pt
+final_model*
+result/
+reports/
+output/
+outputs/
+metrics.json
+metrics.csv

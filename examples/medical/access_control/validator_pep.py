@@ -19,27 +19,33 @@ class ExternalAccessControlValidator:
         self,
         timeout_seconds: int = 5,
         retry_count: int = 2,
-        fail_open: bool = True,
+        fail_open: bool = False,
     ):
         self.enabled = True
         try:
-            self.pep = PolicyEnforcementPoint(timeout_seconds=timeout_seconds)
+            if fail_open:
+                raise ValueError("Fail-open enforcement is not supported")
+            self.pep = PolicyEnforcementPoint(
+                timeout_seconds=timeout_seconds, retry_count=retry_count
+            )
             log(INFO, "ExternalAccessControlValidator (PEP) initialized")
         except Exception as e:
             log(ERROR, "Failed to initialize PolicyEnforcementPoint: %s", e)
-            if fail_open:
-                log(WARNING, "Fail-open mode: disabling enforcement (validator will allow)")
-                self.enabled = False
-            else:
-                raise
+            raise
 
-    def is_allowed_full_training(self, node_id: Optional[int] = None) -> Tuple[bool, str]:
+    def is_allowed_full_training(self, node_id: Optional[int] = None, action: str = "train") -> Tuple[bool, str]:
         try:
-            allowed = self.pep.check_node_allowed_full_training(node_id)
+            allowed = self.pep.check_node_allowed_full_training(node_id, action=action)
             return (True, "Allowed by PEP") if allowed else (False, "Denied by PEP")
         except Exception as e:  # pragma: no cover - defensive
             log(WARNING, "PEP call failed: %s", e)
-            return True, "PEP error - allowing by default"
+            return False, "PEP error - denied (fail closed)"
+
+    def is_task_authorized(self) -> Tuple[bool, str]:
+        return self.is_allowed_full_training(node_id=None, action="task_approval")
+
+    def is_node_activation_allowed(self, node_id: Optional[int]) -> Tuple[bool, str]:
+        return self.is_allowed_full_training(node_id=node_id, action="membership_validation")
 
     def is_allowed_to_evaluate(self, node_id: Optional[int] = None) -> Tuple[bool, str]:
         """Check whether a node is allowed to perform evaluation tasks
@@ -50,6 +56,4 @@ class ExternalAccessControlValidator:
             return (True, "Allowed by PEP") if allowed else (False, "Denied by PEP")
         except Exception as e:  # pragma: no cover - defensive
             log(WARNING, "PEP call (evaluate) failed: %s", e)
-            return True, "PEP error - allowing by default"
-
-    
+            return False, "PEP error - denied (fail closed)"

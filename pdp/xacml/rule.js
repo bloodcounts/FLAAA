@@ -92,7 +92,7 @@ Rule.prototype.evaluate = function (context) {
     match = this.target.match(context);
     var result = match.getResult();
 
-    console.log(`Rule ${this.idAttr} target match result: ${result}`);
+  if (process.env.LUAS_TRACE === 'true') console.log(`Rule ${this.idAttr} target match result: ${result}`);
 
     if (result == MatchResult.prototype.NO_MATCH) {
       return ResultFactory.prototype.getFactory().getResultWithCtx(Result.prototype.DECISION_NOT_APPLICABLE, context);
@@ -120,7 +120,7 @@ Rule.prototype.evaluate = function (context) {
 
   result = this.condition.evaluate(context);
 
-  console.log(`Rule ${this.idAttr} condition evaluation: indeterminate=${result.indeterminate}, value=${result.value}`);
+  if (process.env.LUAS_TRACE === 'true') console.log(`Rule ${this.idAttr} condition evaluation: indeterminate=${result.indeterminate}, value=${result.value}`);
 
   if (result.indeterminate) {
     if (this.xacmlVersion == XACMLConstants.XACML_VERSION_3_0) {

@@ -1,0 +1,28 @@
+.git
+**/node_modules
+**/__pycache__
+**/.venv
+**/data
+**/*_data
+**/INTERVAL_by_centre
+**/*.csv
+**/*.tsv
+**/*.npz
+**/*.npy
+**/*.parquet
+**/*.pt
+**/*.pth
+**/*.ckpt
+**/*.jsonl
+**/logs
+**/certificates
+**/certs
+**/.env*
+
+# Legacy checkpoints and generated output
+**/final_model*
+**/*. pt
+**/result
+**/reports
+**/output
+**/outputs

@@ -44,9 +44,9 @@ DenyOverridesRuleAlg.prototype.combine = function (context, parameters, ruleElem
 
 	for (let i = 0; i < ruleElements.length; i++) {
 		const rule = ruleElements[i];
-		console.log(`Evaluating rule: ${rule.idAttr}`);
+		if (process.env.LUAS_TRACE === 'true') console.log(`Evaluating rule: ${rule.idAttr}`);
 		const result = rule.evaluate(context);
-		console.log(`Rule ${rule.idAttr} decision: ${result.getDecision()}`);
+		if (process.env.LUAS_TRACE === 'true') console.log(`Rule ${rule.idAttr} decision: ${result.getDecision()}`);
 		const value = result.getDecision();
 		if (value == AbstractResult.prototype.DECISION_DENY) {
 			return result;

@@ -3,7 +3,7 @@ const path = require('path');
 const Luas = require('../../xacml/luas');
 
 async function loadPDP() {
-  const policyFile = path.resolve(__dirname, 'policyset_obligation.xml');
+  const policyFile = path.resolve(__dirname, '../../policies/medical.xml');
   console.log('🔧 Initializing PDP with policy:', policyFile);
   const luas = await Luas.create([policyFile]);
   return luas;

@@ -4,3 +4,7 @@ default = "cancer-detection"
 [superlink.cancer-detection]
 address = "superlink:9093"
 root-certificate = "/certificates/ca.crt"
+
+# Local simulation connection; runtime files stay in FLWR_HOME.
+[superlink.local-simulation]
+address = ":local:"

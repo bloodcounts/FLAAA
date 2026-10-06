@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
+const https = require('https');
 
 const Container = require('./createDependencies');
 const PolicyFilter = require('./xacml/policyFilter');
@@ -76,10 +78,32 @@ async function init() {
     app.locals.container = container;
     app.locals.port = container.port;
 
-    server = app.listen(container.port, () => {
-      container.logger.info('PDP listening at http://localhost:%d', container.port);
-      container.logger.info('API docs available at http://localhost:%d/docs', container.port);
-    });
+    // Optional TLS: PEP clients in this deployment require an HTTPS PDP
+    // endpoint (fail-closed by construction: they refuse to talk to a plain
+    // HTTP endpoint at all). If TLS_CERT_PATH/TLS_KEY_PATH are both set and
+    // readable, terminate TLS here; otherwise fall back to plain HTTP exactly
+    // as before (e.g. behind an external TLS-terminating proxy).
+    const tlsCertPath = process.env.TLS_CERT_PATH;
+    const tlsKeyPath = process.env.TLS_KEY_PATH;
+    if ((tlsCertPath || tlsKeyPath)
+        && !(tlsCertPath && tlsKeyPath && fs.existsSync(tlsCertPath) && fs.existsSync(tlsKeyPath))) {
+      throw new Error('TLS_CERT_PATH and TLS_KEY_PATH must both name readable files');
+    }
+    if (tlsCertPath && tlsKeyPath) {
+      const tlsOptions = {
+        cert: fs.readFileSync(tlsCertPath),
+        key: fs.readFileSync(tlsKeyPath),
+      };
+      server = https.createServer(tlsOptions, app).listen(container.port, () => {
+        container.logger.info('PDP listening at https://localhost:%d (TLS)', container.port);
+        container.logger.info('API docs available at https://localhost:%d/docs', container.port);
+      });
+    } else {
+      server = app.listen(container.port, () => {
+        container.logger.info('PDP listening at http://localhost:%d', container.port);
+        container.logger.info('API docs available at http://localhost:%d/docs', container.port);
+      });
+    }
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Initialization failed: %s', err.stack || err);

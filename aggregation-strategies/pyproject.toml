@@ -7,7 +7,7 @@ name = "aggregation-strategies"
 version = "0.1.0"
 description = "Federated learning aggregation strategies with access control"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = {text = "Apache-2.0"}
 authors = [
     {name = "FLAAA Team"}
@@ -18,15 +18,18 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "flwr>=1.0.0",
+    "flwr==1.36.0",
     "torch>=2.0.0",
     "numpy>=1.24.0",
 ]
 
 [tool.setuptools]
 packages = ["aggregation_strategies", "aggregation_strategies.strategies"]
+
+[tool.setuptools.package-dir]
+aggregation_strategies = "."
+"aggregation_strategies.strategies" = "strategies"

@@ -16,7 +16,14 @@ describe('DecisionParamsBuilder', () => {
           };
         }
         return null;
-      }
+      },
+      getMembershipTypeInfo: (taskId) => (taskId === 'medical' ? {
+        taskExpires: '2026-12-31T23:59:59Z',
+        isMember: true,
+        taskMembershipExpires: '2026-12-31T23:59:59Z',
+        taskRole: 'participant',
+        current_date_time: '2025-06-15T12:00:00Z'
+      } : null)
     };
     builder = new DecisionParamsBuilder(pip);
   });
@@ -46,6 +53,14 @@ describe('DecisionParamsBuilder', () => {
       expect(result).to.include('2026-12-31T23:59:59Z');
       expect(result).to.include('<Attribute AttributeId="current-dateTime"');
       expect(result).to.include('2025-06-15T12:00:00Z');
+    });
+
+    it('should build aggregate authorization with membership attributes', () => {
+      const result = builder.build('aggregate', { task_id: 'medical' });
+      expect(result).to.be.a('string');
+      expect(result).to.include('aggregate');
+      expect(result).to.include('is_member_of_task');
+      expect(result).to.include('medical');
     });
 
     it('should handle different parameter names', () => {

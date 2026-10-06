@@ -41,14 +41,14 @@ DenyOverridesPolicyAlg.prototype.combine = function (context, parameters, policy
 
 	for (let policy of policyElements) {
 		const match = policy.match(context);
-		console.log(`Child policy ${policy.idAttr} match: ${match.getResult()}`);
+		if (process.env.LUAS_TRACE === 'true') console.log(`Child policy ${policy.idAttr} match: ${match.getResult()}`);
 		if (match.getResult() == MatchResult.prototype.INDETERMINATE) {
 			return ResultFactory.prototype.getFactory().getResultWithCtx(AbstractResult.prototype.DECISION_DENY, context);
 		}
 		if (match.getResult() == MatchResult.prototype.MATCH) {
 			// evaluate the policy
 			const result = policy.evaluate(context);
-			console.log(`Policy ${policy.idAttr} evaluated decision: ${result.getDecision()}`);
+			if (process.env.LUAS_TRACE === 'true') console.log(`Policy ${policy.idAttr} evaluated decision: ${result.getDecision()}`);
 			const effect = result.getDecision();
 
 			// unlike in the RuleCombining version of this alg, we always

@@ -8,3 +8,29 @@ __pycache__
 .git
 examples
 tests
+
+# Private datasets and runtime artifacts
+data
+*_data
+INTERVAL_by_centre
+*.csv
+*.tsv
+*.npz
+*.npy
+*.parquet
+*.pt
+*.pth
+*.ckpt
+*.jsonl
+checkpoints
+certificates
+certs
+.env*
+
+# Legacy checkpoints and generated output
+**/final_model*
+**/*. pt
+**/result
+**/reports
+**/output
+**/outputs

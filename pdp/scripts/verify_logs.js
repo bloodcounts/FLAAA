@@ -3,16 +3,119 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const readline = require('readline');
 const jws = require('jws');
 
+const GENESIS_HASH = '0'.repeat(64);
+
+// Must match utils/decisionLogger.js's canonicalStringify exactly, or every
+// recomputed hash will mismatch. Kept in sync deliberately rather than
+// imported, so this verifier can be run standalone against archived logs
+// without pulling in the full PDP dependency graph.
+function canonicalStringify(value) {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalStringify).join(',')}]`;
+  const keys = Object.keys(value).sort();
+  const body = keys.map((k) => `${JSON.stringify(k)}:${canonicalStringify(value[k])}`).join(',');
+  return `{${body}}`;
+}
+
+function sha256Hex(str) {
+  return crypto.createHash('sha256').update(str, 'utf8').digest('hex');
+}
+
+/**
+ * Verify sequence continuity, previous/event hash chaining, and (if a
+ * checkpoints file is supplied) that the chain does not end before the last
+ * anchored checkpoint (truncation). Detects: payload modification (event_hash
+ * recomputation fails), deletion or reordering (sequence/previous_event_hash
+ * mismatch), and truncation after the last checkpoint.
+ *
+ * `entries` must be the raw parsed JSONL objects in file order (i.e. exactly
+ * as read from disk) so that deletion/reordering performed on the file itself
+ * is visible here.
+ */
+function verifyChain(entries, checkpoints) {
+  let previous = GENESIS_HASH;
+  for (let i = 0; i < entries.length; i += 1) {
+    const entry = entries[i];
+    const claimedHash = entry.event_hash;
+    const withoutHash = { pdpAudit: entry.pdpAudit, jws: entry.jws, signedPayload: entry.signedPayload };
+    const recomputed = sha256Hex(canonicalStringify(withoutHash));
+
+    if (!entry.pdpAudit || entry.pdpAudit.sequence !== i + 1
+      || entry.pdpAudit.previous_event_hash !== previous) {
+      return { ok: false, failedAtLine: i + 1, reason: 'chain-discontinuity' };
+    }
+    if (claimedHash !== recomputed) {
+      return { ok: false, failedAtLine: i + 1, reason: 'event-hash-mismatch' };
+    }
+    previous = claimedHash;
+  }
+
+  if (checkpoints && checkpoints.length > 0) {
+    for (const checkpoint of checkpoints) {
+      const sequence = checkpoint.checkpoint_sequence;
+      const entry = entries[sequence - 1];
+      if (!entry || entry.pdpAudit.sequence !== sequence || entry.event_hash !== checkpoint.event_hash) {
+        return { ok: false, failedAtLine: sequence, reason: 'checkpoint-mismatch' };
+      }
+    }
+    const lastCheckpoint = checkpoints[checkpoints.length - 1];
+    const lastSequence = entries.length > 0 ? entries[entries.length - 1].pdpAudit.sequence : 0;
+    if (lastSequence < lastCheckpoint.checkpoint_sequence) {
+      return { ok: false, failedAtLine: entries.length + 1, reason: 'checkpoint-truncation' };
+    }
+  }
+
+  return { ok: true, failedAtLine: null, reason: null };
+}
+
 function usage() {
   console.log('Usage: node scripts/verify_logs.js <logfile1> [<logfile2> ...]');
+  console.log('       node scripts/verify_logs.js --chain <audit_log.jsonl>');
   process.exit(2);
 }
 
 const args = process.argv.slice(2);
 if (args.length < 1) usage();
+
+if (args[0] === '--chain') {
+  const auditPath = args[1];
+  if (!auditPath || !fs.existsSync(auditPath)) {
+    console.error('Audit log file not found:', auditPath);
+    process.exitCode = 2;
+  } else {
+    const lines = fs.readFileSync(auditPath, 'utf8').split('\n').filter((l) => l.trim().length > 0);
+    const entries = [];
+    let parseError = false;
+    for (const line of lines) {
+      try {
+        entries.push(JSON.parse(line));
+      } catch {
+        parseError = true;
+        break;
+      }
+    }
+    const checkpointPath = process.env.AUDIT_CHECKPOINT_PATH || `${auditPath}.checkpoints.jsonl`;
+    let checkpoints = [];
+    if (fs.existsSync(checkpointPath)) {
+      checkpoints = fs.readFileSync(checkpointPath, 'utf8')
+        .split('\n').filter((l) => l.trim().length > 0).map((l) => JSON.parse(l));
+    }
+
+    if (parseError) {
+      console.log(JSON.stringify({ ok: false, failedAtLine: null, reason: 'json-parse-error' }, null, 2));
+      process.exitCode = 3;
+    } else {
+      const result = verifyChain(entries, checkpoints);
+      console.log(JSON.stringify({ ...result, totalEntries: entries.length, checkpoints: checkpoints.length }, null, 2));
+      process.exitCode = result.ok ? 0 : 3;
+    }
+  }
+  return;
+}
 
 // Modes: node verify_logs.js <files...>
 //        node verify_logs.js --dir <dir>
@@ -191,6 +294,16 @@ async function processFile(file) {
           if (payloadStr !== signedPayloadFromLog) {
             local.signedInvalid += 1;
             console.error(`${file}:${local.totalLines} signature payload mismatch vs signedPayload`);
+            return;
+          }
+          // The duplicate human-readable audit object must also be bound to
+          // the JWS.  Comparing only the compact-token payload with the
+          // `signedPayload` copy would let an attacker alter `pdpAudit`.
+          const payloadObj = tryParseJson(payloadStr) || payloadStr;
+          if (!payloadObj || !payloadObj.pdpAudit
+              || JSON.stringify(stable(payloadObj.pdpAudit)) !== JSON.stringify(stable(pdpAudit))) {
+            local.signedInvalid += 1;
+            console.error(`${file}:${local.totalLines} signature payload mismatch vs log pdpAudit`);
           } else {
             local.signedValid += 1;
           }

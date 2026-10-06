@@ -6,6 +6,31 @@ from flwr.server import Grid
 from typing import Iterable, Optional
 from flwr.common.logger import log
 from logging import INFO, WARNING
+import json
+import os
+import time
+
+
+def _log_reply_metrics(server_round: int, replies) -> None:
+    """Append each reply's own metrics (incl. per-centre roc_auc) to a JSONL
+    file for offline analysis, when METRICS_LOG_PATH is set. This is an
+    experiment-instrumentation hook only; it is a no-op (and touches no
+    governance/aggregation behaviour) unless the env var is set."""
+    path = os.getenv("METRICS_LOG_PATH")
+    if not path:
+        return
+    with open(path, "a") as fh:
+        for message in replies:
+            if message.has_error():
+                continue
+            metrics = message.content.get("metrics")
+            if metrics is None:
+                continue
+            record = dict(metrics)
+            record["server_round"] = server_round
+            record["node_id"] = message.metadata.src_node_id
+            record["logged_at"] = time.time()
+            fh.write(json.dumps(record) + "\n")
 
 
 class FedAvgGridWithFilter(FedAvg):
@@ -102,7 +127,7 @@ class FedAvgGridWithFilter(FedAvg):
                 continue
 
             node_id = message.metadata.src_node_id
-            allowed, reason = self._check_full_training_allowed(node_id)
+            allowed, reason = self._check_full_training_allowed(node_id, action="aggregate")
             if allowed:
                 eligible_replies.append(message)
                 log(INFO, "  ✅ Node %d: INCLUDED in aggregation", node_id)
@@ -166,20 +191,21 @@ class FedAvgGridWithFilter(FedAvg):
         replies_list = list(replies)
         log(INFO, "  ├── Received: %d evaluation results", len(replies_list))
         log(INFO, "  └── Including all evaluation results\n")
+        _log_reply_metrics(server_round, replies_list)
         return super().aggregate_evaluate(server_round, replies_list)
 
-    def _check_full_training_allowed(self, node_id: int) -> tuple[bool, str]:
-        """Delegate to validator; fail-open on errors."""
+    def _check_full_training_allowed(self, node_id: int, action: str = "train") -> tuple[bool, str]:
+        """Delegate to validator; fail closed on errors."""
         try:
-            return self.access_validator.is_allowed_full_training(node_id)
+            return self.access_validator.is_allowed_full_training(node_id, action=action)
         except Exception as e:
             log(WARNING, "Error calling PEP for node %d: %s", node_id, e)
-            return True, "PEP error - allowing by default"
+            return False, "PEP error - denied (fail closed)"
 
     def _check_evaluation_allowed(self, node_id: int) -> tuple[bool, str]:
-        """Delegate to validator for evaluation checks; fail-open on errors."""
+        """Delegate to validator for evaluation checks; fail closed on errors."""
         try:
             return self.access_validator.is_allowed_to_evaluate(node_id)
         except Exception as e:
             log(WARNING, "Error calling PEP (evaluate) for node %d: %s", node_id, e)
-            return True, "PEP error - allowing by default"
+            return False, "PEP error - denied (fail closed)"

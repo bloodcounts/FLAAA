@@ -1,8 +1,28 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const pino = require('pino');
 const jws = require('jws');
 const XACMLConstants = require('../xacml/XACMLConstants');
+
+const GENESIS_HASH = '0'.repeat(64);
+
+/**
+ * Deterministic canonical JSON (recursively sorted object keys, no
+ * whitespace) so the same logical record always hashes/signs to the same
+ * bytes regardless of property insertion order.
+ */
+function canonicalStringify(value) {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalStringify).join(',')}]`;
+  const keys = Object.keys(value).sort();
+  const body = keys.map((k) => `${JSON.stringify(k)}:${canonicalStringify(value[k])}`).join(',');
+  return `{${body}}`;
+}
+
+function sha256Hex(str) {
+  return crypto.createHash('sha256').update(str, 'utf8').digest('hex');
+}
 
 class DecisionLogger {
   constructor(options = {}) {
@@ -46,7 +66,76 @@ class DecisionLogger {
     this.signingPrivateKeyPem = null;
     this.signingKid = this.process.env.SIGNING_KID || 'pdp-signing-key';
     this.signingAlg = this.process.env.SIGNING_ALG || 'ES256';
+    this.requireSigning = this.process.env.REQUIRE_ES256_SIGNING === 'true';
+    this.auditEnabled = this.process.env.DECISION_AUDIT_ENABLED !== 'false';
+    this.auditLogPath = this.process.env.AUDIT_LOG_PATH || null;
+    this.auditFailure = null;
+    if (this.requireSigning && !this.auditEnabled) {
+      throw new Error('Mandatory audit signing requires DECISION_AUDIT_ENABLED=true');
+    }
+    if (this.signingAlg !== 'ES256') {
+      throw new Error('Only ES256 is supported for PDP audit signing');
+    }
     this.loadSigningKey();
+    if (this.requireSigning && !this.signingPrivateKeyPem) {
+      throw new Error('REQUIRE_ES256_SIGNING=true requires a readable SIGNING_KEY_PATH');
+    }
+
+    // Hash-chain / checkpoint state for deletion, reordering, and
+    // truncation detection). Each record commits to the hash of the previous
+    // record via `previous_event_hash`, and both fields are covered by the
+    // ES256 signature (they are set on payloadObj before signing). Every
+    // `checkpointEvery` records, an independently signed checkpoint is
+    // appended to `<AUDIT_LOG_PATH>.checkpoints.jsonl`; a chain that ends
+    // before the last exported checkpoint's sequence number is truncated.
+    this.sequence = 0;
+    this.previousEventHash = GENESIS_HASH;
+    this.checkpointEvery = Number(this.process.env.AUDIT_CHECKPOINT_EVERY || '50');
+    if (!Number.isInteger(this.checkpointEvery) || this.checkpointEvery < 1) {
+      throw new Error('AUDIT_CHECKPOINT_EVERY must be a positive integer');
+    }
+    this.checkpointLogPath = this.process.env.AUDIT_CHECKPOINT_PATH
+      || (this.auditLogPath ? `${this.auditLogPath}.checkpoints.jsonl` : null);
+    this.resumeChainState();
+  }
+
+  resumeChainState() {
+    if (!this.auditLogPath) return;
+    try {
+      const entries = this.fs.existsSync(this.auditLogPath)
+        ? this.fs.readFileSync(this.auditLogPath, 'utf8').split('\n')
+          .filter((line) => line.trim()).map((line) => JSON.parse(line))
+        : [];
+      let previous = GENESIS_HASH;
+      entries.forEach((entry, index) => {
+        const withoutHash = {
+          pdpAudit: entry.pdpAudit, jws: entry.jws, signedPayload: entry.signedPayload,
+        };
+        if (entry.pdpAudit?.sequence !== index + 1
+            || entry.pdpAudit.previous_event_hash !== previous
+            || entry.event_hash !== sha256Hex(canonicalStringify(withoutHash))) {
+          throw new Error(`invalid audit chain at record ${index + 1}`);
+        }
+        previous = entry.event_hash;
+      });
+      if (this.checkpointLogPath && this.fs.existsSync(this.checkpointLogPath)) {
+        const checkpoints = this.fs.readFileSync(this.checkpointLogPath, 'utf8')
+          .split('\n').filter((line) => line.trim()).map((line) => JSON.parse(line));
+        let lastSequence = 0;
+        checkpoints.forEach((checkpoint) => {
+          const sequence = checkpoint.checkpoint_sequence;
+          if (!Number.isInteger(sequence) || sequence <= lastSequence
+              || entries[sequence - 1]?.event_hash !== checkpoint.event_hash) {
+            throw new Error('audit chain does not match retained checkpoints');
+          }
+          lastSequence = sequence;
+        });
+      }
+      this.sequence = entries.length;
+      this.previousEventHash = previous;
+    } catch (err) {
+      throw new Error(`Cannot resume audit chain from ${this.auditLogPath}: ${err.message}`);
+    }
   }
 
   loadSigningKey() {
@@ -66,7 +155,10 @@ class DecisionLogger {
   }
 
   signPayload(payloadStr) {
-    if (!this.signingPrivateKeyPem) return null;
+    if (!this.signingPrivateKeyPem) {
+      if (this.requireSigning) throw new Error('Mandatory ES256 signing key is unavailable');
+      return null;
+    }
     try {
       return this.jws.sign({
         header: { alg: this.signingAlg, kid: this.signingKid },
@@ -75,6 +167,7 @@ class DecisionLogger {
       });
     } catch (err) {
       this.logger.error({ err }, 'Failed to sign payload');
+      if (this.requireSigning) throw err;
       return null;
     }
   }
@@ -130,32 +223,74 @@ class DecisionLogger {
   }
 
   log(decision, evaluationCtx, extras) {
+    if (!this.auditEnabled) return null;
+    if (this.auditFailure) throw new Error(`Audit writer stopped: ${this.auditFailure.message}`);
     try {
       const fields = this.extractFields(evaluationCtx || {});
       const policyRefs = evaluationCtx && evaluationCtx.policyReferences
         ? this.policyRefsToArray(evaluationCtx.policyReferences)
         : [];
 
+      const sequence = this.sequence + 1;
       const payloadObj = {
         timestamp: new Date().toISOString(),
         decision,
-        subject: fields.subjectId || null,
-        resource: fields.resourceId || null,
-        action: fields.actionId || null,
+        subject: fields.subjectId ?? extras?.node_id ?? null,
+        resource: fields.resourceId ?? extras?.task_id ?? null,
+        action: fields.actionId ?? extras?.action ?? null,
         policyReferences: policyRefs,
         extras: extras || null,
+        sequence,
+        previous_event_hash: this.previousEventHash,
       };
 
       const payloadStr = JSON.stringify({ pdpAudit: payloadObj });
       const jwsCompact = this.signPayload(payloadStr);
+      if (this.requireSigning && !jwsCompact) {
+        throw new Error('Mandatory ES256 signing produced no JWS');
+      }
 
-      this.logger.info({
+      const entryWithoutHash = {
         pdpAudit: payloadObj,
         jws: jwsCompact,
         signedPayload: jwsCompact ? payloadStr : null,
-      });
+      };
+      // Hash exactly the representation that is persisted. Runtime decision
+      // objects can contain enumerable properties whose value is undefined;
+      // JSON.stringify omits those properties, so hashing the live object
+      // would produce a digest that an offline verifier cannot reproduce.
+      const persistedEntryWithoutHash = JSON.parse(JSON.stringify(entryWithoutHash));
+      // The event hash commits to the fully-formed, signed record (including
+      // its own sequence number and the previous record's hash), so any
+      // single altered, deleted, or reordered record breaks the chain for
+      // every subsequent record, not just itself.
+      const eventHash = sha256Hex(canonicalStringify(persistedEntryWithoutHash));
+      const entry = { ...persistedEntryWithoutHash, event_hash: eventHash };
+
+      this.logger.info(entry);
+      // A dedicated JSONL stream makes independent verification deterministic
+      // and avoids mixing audit events with operational logs.
+      if (this.auditLogPath) {
+        this.fs.appendFileSync(this.auditLogPath, `${JSON.stringify(entry)}\n`);
+      }
+      this.sequence = sequence;
+      this.previousEventHash = eventHash;
+      if (this.checkpointLogPath && sequence % this.checkpointEvery === 0) {
+        const checkpoint = { checkpoint_sequence: sequence, event_hash: eventHash };
+        const checkpointSignature = this.signPayload(canonicalStringify(checkpoint));
+        this.fs.appendFileSync(
+          this.checkpointLogPath,
+          `${JSON.stringify({ ...checkpoint, signature: checkpointSignature })}\n`,
+        );
+      }
+      return entry;
     } catch (err) {
       this.logger.error({ err }, 'DecisionLogger.log error');
+      if (this.requireSigning) {
+        this.auditFailure = err;
+        throw err;
+      }
+      return null;
     }
   }
 }

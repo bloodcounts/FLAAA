@@ -5,7 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "flwr-abac"
 version = "1.0.0"
-description = ""
+description = "Governed federated learning with Flower and PyTorch"
+requires-python = ">=3.11"
 license = "Apache-2.0"
 
 dependencies = [
@@ -14,13 +15,15 @@ dependencies = [
     "torch",
     "datasets",
     "numpy",
+    "flwr[simulation]==1.36.0",
 ]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["medical"]
+exclude = ["medical/*_data/**", "**/*.csv", "**/*.npz", "**/*.npy", "**/*.pt", "**/*.jsonl", "**/__pycache__/**"]
 
 [tool.flwr.app]
 publisher = "fz285"
@@ -32,55 +35,27 @@ clientapp = "medical.client_app:app"
 
 # Custom config values accessible via `context.run_config`
 [tool.flwr.app.config]
-num-server-rounds = 2
-fraction-train = 0.5
-local-epochs = 1
-lr = 0.01
-min-fit-clients = 2 
-min-evaluate-clients = 2 
-min-available-clients = 2
+num_rounds = 15
+local_epochs = 2
+learning_rate = 0.001
+batch_size = 64
+hidden_dims = "64,32"
+dropout = 0.3
+fraction_train = 1.0
+fraction_evaluate = 1.0
+min_available_clients = 25
+strategy = "fedavg"
+governance_enabled = true
+register_simulated_nodes = false
+proximal_mu = 0.01
+federation = "default"
+icnn_alpha = 0.1
+icnn_lr = 0.001
+icnn_steps = 2
+fault_profile = "nominal"
+fault_seed = 0
+fault_fraction = 0.2
+fault_base_delay_s = 0.1
+fault_straggler_delay_s = 1.0
 
-# Default federation to use when running the app
-
-#######################################################################
-# CONFIGURATION MIGRATION NOTICE:
-#
-# What was previously called "federation config" for SuperLink
-# connections in pyproject.toml has been renamed and moved.
-#
-# These settings are now **SuperLink connection configuration**
-# and are defined in the Flower configuration file.
-#
-# The entries below are commented out intentionally and are kept
-# only as a migration reference.
-#
-# Docs: https://flower.ai/docs/framework/ref-flower-configuration.html
-#######################################################################
-
-# [tool.flwr.federations]
-# default = "local-simulation"
-
-# # Local simulation federation with 10 virtual SuperNodes
-# [tool.flwr.federations.local-simulation]
-# options.num-supernodes = 2
-
-# # Remote federation example for use with SuperLink
-# [tool.flwr.federations.remote-federation]
-# address = "127.0.0.1:9093"
-# insecure = true  # Remove this line to enable TLS
-# # root-certificates = "<PATH/TO/ca.crt>"  # For TLS setup
-
-
-# [tool.flwr.federations.cancer-detection]
-# address = "superlink:9093"
-# root-certificates = "/certificates/ca.crt"
-
-# [tool.flwr.federations.diabetes-prediction] 
-# address = "127.0.0.1:9093"
-# options.num-supernodes = 5
-
-
-# [tool.flwr.federations.drug-discovery]
-# address = "127.0.0.1:9093"
-# options.num-supernodes = 2
-
+# SuperLink connections are configured in flwr-config.toml.

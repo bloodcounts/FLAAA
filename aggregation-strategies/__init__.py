@@ -1,18 +1,6 @@
-"""Aggregation Strategies for Federated Learning with Access Control.
+"""Flower aggregation strategies with policy enforcement."""
 
-This package provides aggregation strategies for federated learning that integrate
-with external Policy Enforcement Points (PEP) for access control.
-
-Available Strategies:
-- FedAvgGridWithFilter: Federated Averaging with access control filtering
-- FedMAPWithFilter: Federated MAP with ICNN prior and access control filtering
-"""
-
-from .strategies import FedAvgGridWithFilter, FedMAPWithFilter
+from .strategies import FedAvgGridWithFilter, FedProxGridWithFilter, FedPerGridWithFilter, FedMAPWithFilter
 
 __version__ = "0.1.0"
-
-__all__ = [
-    "FedAvgGridWithFilter",
-    "FedMAPWithFilter",
-]
+__all__ = ["FedAvgGridWithFilter", "FedProxGridWithFilter", "FedPerGridWithFilter", "FedMAPWithFilter"]

@@ -21,7 +21,8 @@ class DecisionParamsBuilder {
     const info = this.pip.getTaskPolicyInfo(taskId);
     if (!info) return null;
     const action = 'task-authorization';
-    const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
+    const taskExpires = info.taskExpires ?? info.task_expires;
+    if (!taskExpires) return null;
     const now = info.current_date_time || info.currentDateTime || new Date().toISOString();
     const x = DecisionParamsBuilder.#escapeXml;
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -54,9 +55,12 @@ class DecisionParamsBuilder {
     const info = this.pip.getMembershipInfo(taskId, nodeId);
     if (!info) return null;
     const action = 'node-activation';
-    const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
-    const isMember = info.isMember || info.is_member_of_task || 'false';
-    const taskMembershipExpires = info.taskMembershipExpires || info.task_membership_expires || '2026-12-31T23:59:59Z';
+    const taskExpires = info.taskExpires ?? info.task_expires;
+    if (!taskExpires) return null;
+    const isMember = info.isMember ?? info.is_member_of_task;
+    if (isMember === undefined || isMember === null || isMember === '') return null;
+    const taskMembershipExpires = info.taskMembershipExpires ?? info.task_membership_expires;
+    if (!taskMembershipExpires) return null;
     const now = info.current_date_time || info.currentDateTime || new Date().toISOString();
     const x = DecisionParamsBuilder.#escapeXml;
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -93,7 +97,7 @@ class DecisionParamsBuilder {
 </Request>`;
   }
 
-  #buildMembershipType(params) {
+  #buildMembershipType(params, requestedAction) {
     const taskId = params.task_id || params.taskId || params.task || params.id;
     const nodeId = params.node_id || params.nodeId || params.node;
     if (!taskId) return null;
@@ -101,11 +105,15 @@ class DecisionParamsBuilder {
       ? this.pip.getMembershipInfo(taskId, nodeId) || this.pip.getMembershipTypeInfo(taskId)
       : this.pip.getMembershipTypeInfo(taskId);
     if (!info) return null;
-    const { action } = params;
-    const taskExpires = info.taskExpires || info.task_expires || '2026-12-31T23:59:59Z';
-    const isMember = info.isMember || info.is_member_of_task || 'true';
-    const taskMembershipExpires = info.taskMembershipExpires || info.task_membership_expires || '2026-12-31T23:59:59Z';
-    const taskRole = info.taskRole || info.task_role || 'participant';
+    const action = requestedAction || params.action;
+    const taskExpires = info.taskExpires ?? info.task_expires;
+    if (!taskExpires) return null;
+    const isMember = info.isMember ?? info.is_member_of_task;
+    if (isMember === undefined || isMember === null || isMember === '') return null;
+    const taskMembershipExpires = info.taskMembershipExpires ?? info.task_membership_expires;
+    if (!taskMembershipExpires) return null;
+    const taskRole = info.taskRole ?? info.task_role;
+    if (!taskRole) return null;
     const now = info.current_date_time || info.currentDateTime || new Date().toISOString();
     const x = DecisionParamsBuilder.#escapeXml;
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -158,8 +166,9 @@ class DecisionParamsBuilder {
         return this.#buildMembershipValidation(params);
 
       case 'train':
+      case 'aggregate':
       case 'evaluate':
-        return this.#buildMembershipType(params);
+        return this.#buildMembershipType(params, String(action).toLowerCase());
 
       default:
         return null;

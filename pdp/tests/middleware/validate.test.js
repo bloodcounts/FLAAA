@@ -75,6 +75,18 @@ describe('Validation Middleware', () => {
       expect(mockRes.status.notCalled).to.be.true;
     });
 
+    it('should call next() for valid aggregate action', () => {
+      mockReq.query = {
+        action: 'aggregate',
+        task_id: 'task123'
+      };
+
+      validateDecisionQuery(mockReq, mockRes, mockNext);
+
+      expect(mockNext.calledOnce).to.be.true;
+      expect(mockRes.status.notCalled).to.be.true;
+    });
+
     it('should accept task-approval action', () => {
       mockReq.query = {
         action: 'task-approval',
@@ -176,7 +188,7 @@ describe('Validation Middleware', () => {
       expect(mockRes.status.calledWith(StatusCodes.BAD_REQUEST)).to.be.true;
       expect(mockRes.json.calledWith({
         error: 'Validation failed',
-        details: '"action" must be one of [task_approval, task-approval, taskapproval, taks_approval, membership_validation, membership-validation, membershipvalidation, memebership_validation, train, evaluate]'
+        details: '"action" must be one of [task_approval, task-approval, taskapproval, taks_approval, membership_validation, membership-validation, membershipvalidation, memebership_validation, train, aggregate, evaluate]'
       })).to.be.true;
       expect(mockNext.notCalled).to.be.true;
     });

@@ -1,146 +1,16 @@
-# PDP — Policy Decision Point
+# Policy decision point
 
-A Node.js XACML 3.0 Policy Decision Point for federated learning governance. Evaluates access control policies and returns `Permit`, `Deny`, `NotApplicable`, or `Indeterminate` decisions.
+The Node.js PDP evaluates XACML policies and serves `Permit`, `Deny`, `NotApplicable` or `Indeterminate` decisions. FLA³ PEP clients proceed only after a structured, consistent `Permit` response.
 
----
+## Install and run
 
-## Requirements
+Use Node.js 20.9 or later. From `pdp/`, run `npm ci` and `npm start`. `PDP_PORT` defaults to 3000 when started directly; Compose sets it to 8080. `GET /health` reports readiness and `/docs` serves API documentation.
 
-- Node.js >= 20.9.0 (use `nvm use` — version pinned in `.nvmrc`)
-- npm
+PEP clients require HTTPS. Set `TLS_CERT_PATH` and `TLS_KEY_PATH` for direct TLS, or deploy behind a trusted TLS proxy. Set `PDP_CA_CERT_PATH` in Python clients when using a private CA. Signing keys are distinct from TLS credentials.
 
----
+## Policy information
 
-## Installation
-
-```bash
-nvm use
-npm install
-```
-
----
-
-## Running
-
-```bash
-# Production
-npm start
-
-# Development (hot-reload)
-npm run dev
-
-# Docker
-docker compose up
-```
-
----
-
-## API
-
-### `GET /health`
-
-Returns the readiness status of the PDP.
-
-```bash
-curl http://localhost:8080/health
-```
-
-```json
-{ "status": "ready", "port": 8080 }
-```
-
----
-
-### `GET /getDecision`
-
-Evaluates an XACML policy decision for the given action and context.
-
-**Query parameters**
-
-| Parameter | Required | Description |
-|---|---|---|
-| `action` | Yes | One of: `task_approval`, `membership_validation`, `train`, `evaluate` |
-| `task_id` | Yes | Federated learning task identifier (e.g. `medical`) |
-| `node_id` | For `membership_validation` | SuperNode identifier |
-
-**Examples**
-
-```bash
-# Task approval
-curl "http://localhost:8080/getDecision?action=task_approval&task_id=medical"
-
-# Node membership validation
-curl "http://localhost:8080/getDecision?action=membership_validation&task_id=medical&node_id=15692499009958989137"
-
-# Training authorisation
-curl "http://localhost:8080/getDecision?action=train&task_id=medical"
-
-# Evaluation authorisation
-curl "http://localhost:8080/getDecision?action=evaluate&task_id=medical"
-```
-
-**Response**
-
-```json
-{
-  "decision": {
-    "decision": "Permit",
-    "obligations": "[...]",
-    "attributes": "[]",
-    "reason": null,
-    "message": null
-  }
-}
-```
-
----
-
-### `GET /docs`
-
-Swagger UI — interactive API documentation available at [http://localhost:8080/docs](http://localhost:8080/docs).
-
-OpenAPI path definitions live in `swagger/` as standalone YAML files.
-
----
-
-## Certificate Setup
-
-Generate the EC signing key used for JWS audit log signing:
-
-```bash
-# From the FLAAA root — also generates superlink SSL certs
-bash scripts/generate_certs.sh
-```
-
-Or standalone from `pdp/`:
-
-```bash
-mkdir -p certs
-openssl ecparam -genkey -name prime256v1 -noout -out certs/pdp_sign_key.pem
-openssl ec -in certs/pdp_sign_key.pem -pubout -out certs/pdp_sign_pub.pem
-```
-
-The `certs/` directory is gitignored. If no signing key is present the PDP starts normally but JWS signing is disabled (a warning is logged).
-
----
-
-## Configuration
-
-| Environment variable | Default | Description |
-|---|---|---|
-| `PDP_PORT` | `8080` | HTTP port |
-| `POLICY_FILES` | `./policies/medical.xml` | Comma-separated policy file paths |
-| `LOG_LEVEL` | `info` | Pino log level |
-| `NODE_ENV` | — | Set to `production` to suppress stack traces in error responses |
-| `SIGNING_KEY_PATH` | `./certs/pdp_sign_key.pem` | Path to EC private key for JWS audit log signing |
-| `SIGNING_KID` | `pdp-signing-key` | Key ID embedded in JWS header |
-| `SIGNING_ALG` | `ES256` | JWS signing algorithm |
-
----
-
-## Policy Data
-
-Node and task context is read from `sample_data/nodes.json`. Structure:
+`PIP_DATA_PATH` selects an operator-maintained JSON file. Its default is `sample_data/nodes.json`, which is created locally and excluded from Git. Study and node attributes are reread for each decision. A minimal schema is:
 
 ```json
 {
@@ -148,80 +18,71 @@ Node and task context is read from `sample_data/nodes.json`. Structure:
     "medical": {
       "task_expires": "2027-12-31T23:59:59Z",
       "nodes": {
-        "<node_id>": {
+        "123": {
           "is_member_of_task": true,
           "task_membership_expires": "2027-12-31T23:59:59Z",
           "task_role": "participant"
-        },
-        "default": { "..." : "..." }
+        }
       }
     }
   }
 }
 ```
 
----
+Supply each permitted node explicitly. Use `observer` for evaluation-only membership. Expired approvals and memberships block their corresponding actions. Missing or malformed policy attributes fail closed at the PEP.
 
-## Project Structure
+`GET /getDecision` accepts `action`, `task_id` and, for node actions, `node_id`. Actions are `task_approval`, `membership_validation`, `train`, `aggregate` and `evaluate`. Responses include a decision object and `policy` metadata containing the deployment version and the SHA-256 digest of loaded policy bytes. `POLICY_FILES` selects comma-separated policy files; changing loaded policies requires restarting the PDP. `POLICY_VERSION` supplies a human-readable version.
 
-```
-pdp/
-├── app.js                          # Entry point — Express setup, init
-├── .nvmrc                          # Node version pin
-├── routes/
-│   ├── health.js                   # GET /health
-│   └── decision.js                 # GET /getDecision
-├── middleware/
-│   ├── requestLogger.js            # pino-http HTTP logging
-│   ├── validate.js                 # Joi query param validation
-│   └── errorHandler.js             # Centralised error handler
-├── utils/
-│   ├── decisionParams.js           # Builds XACML XML requests (class)
-│   ├── policyInformationPoint.js   # Reads task/node context (class)
-│   └── decisionLogger.js           # Audit logging with JWS signing (class)
-├── swagger/
-│   ├── decision.yaml               # OpenAPI path definition for /getDecision
-│   └── health.yaml                 # OpenAPI path definition for /health
-├── swagger.js                      # swagger-jsdoc + Swagger UI setup
-├── xacml/                          # XACML 3.0 engine (do not modify)
-│   └── luas.js                     # PDP wrapper (ES6 class)
-├── policies/
-│   └── medical.xml                 # FL governance policy
-├── sample_data/
-│   └── nodes.json                  # Task and node policy context
-├── Dockerfile
-└── docker-compose.yml
-```
+## Signed accounting
 
----
-
-## Linting
+Create a P-256 key pair locally:
 
 ```bash
-npm run lint
-npm run lint:fix
+mkdir -p certs logs
+openssl ecparam -genkey -name prime256v1 -noout -out certs/pdp_sign_key.pem
+openssl ec -in certs/pdp_sign_key.pem -pubout -out certs/pdp_sign_pub.pem
+export REQUIRE_ES256_SIGNING=true
+export SIGNING_KEY_PATH="$PWD/certs/pdp_sign_key.pem"
+export SIGNING_KID=pdp-key-1
+export AUDIT_LOG_PATH="$PWD/logs/audit.jsonl"
+export AUDIT_CHECKPOINT_PATH=/path/to/independent-storage/checkpoints.jsonl
+export AUDIT_CHECKPOINT_EVERY=50
+npm start
 ```
 
-**Pre-commit hooks**: Linting and XACML conformance tests are automatically run before each commit using `husky` and `lint-staged`. This ensures code quality standards and policy correctness are maintained.
+Create the checkpoint directory before startup and ensure both output paths are writable. A record includes the decision, timestamp, subject, action, study, policy metadata, sequence and preceding event hash. The JWS uses ES256; the event hash commits to the persisted signed record. Each checkpoint signs a sequence number and corresponding event hash.
 
----
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `REQUIRE_ES256_SIGNING` | `false` | Reject startup without a signing key and deny decisions on audit failure |
+| `SIGNING_KEY_PATH` | `certs/pdp_sign_key.pem` | P-256 private key |
+| `SIGNING_KID` | `pdp-signing-key` | Public-key identifier in signatures |
+| `AUDIT_LOG_PATH` | unset | Dedicated append-only JSONL audit stream |
+| `AUDIT_CHECKPOINT_PATH` | `<AUDIT_LOG_PATH>.checkpoints.jsonl` | Signed checkpoint stream |
+| `AUDIT_CHECKPOINT_EVERY` | `50` | Positive integer checkpoint interval |
+| `DECISION_AUDIT_ENABLED` | `true` | Disable only for measurements without required signing |
+
+Mandatory signing prevents an audit failure from producing an unsigned permit. After a mandatory write failure, restart the writer after inspecting its retained files. Startup checks retained chain continuity and checkpoint anchors before appending. Use the cryptographic verifier before resuming from archived storage.
+
+## Verify accounting
+
+From `pdp/`:
+
+```bash
+node scripts/verify_audit.js /path/to/audit.jsonl /path/to/checkpoints.jsonl \
+  pdp-key-1=/path/to/pdp-key-1-public.pem \
+  pdp-key-2=/path/to/pdp-key-2-public.pem
+```
+
+The combined verifier requires signatures on every record and checkpoint, selects public keys by `kid`, binds the readable record to the signed payload, and checks event hashes, sequence continuity and checkpoint anchors. Keep all public keys needed for retained records when rotating the signing key. Checkpoints and public-key history must be retained independently of the active log.
+
+Individual tools remain available: `verify_logs.js` checks operational-log signatures, `verify_logs.js --chain` checks dedicated-stream hashes and anchors, and `verify_checkpoints.js` checks checkpoint signatures. Use `verify_audit.js` for a complete signed-stream check.
+
+A trusted checkpoint detects truncation before its anchored sequence. Deletion after the latest checkpoint and events never logged cannot be detected by this mechanism. Separate source snapshots from runtime audit files and credentials.
 
 ## Tests
 
 ```bash
-# XACML conformance tests
+npm test
 npm run conformance
 ```
-
----
-
-## Docker
-
-```bash
-# Build and run
-docker compose up
-
-# Build only
-docker build -t pdp .
-```
-

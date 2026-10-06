@@ -121,7 +121,7 @@ AttributeDesignator.prototype.evaluate = function (context) {
 
   try {
     const bagSize = bag && typeof bag.size === 'function' ? bag.size() : (bag && bag.bag ? bag.bag.length : 'unknown');
-    console.log(`AttributeDesignator lookup: id=${this.id}, category=${this.category}, type=${this.type}, bagSize=${bagSize}`);
+    if (process.env.LUAS_TRACE === 'true') console.log(`AttributeDesignator lookup: id=${this.id}, category=${this.category}, type=${this.type}, bagSize=${bagSize}`);
   } catch (e) {
     console.log(`AttributeDesignator lookup (id=${this.id}) error printing bag size: ${e}`);
   }

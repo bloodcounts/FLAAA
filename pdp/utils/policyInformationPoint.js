@@ -3,7 +3,11 @@ const path = require('path');
 
 class PolicyInformationPoint {
   constructor() {
-    this.dataFile = path.join(__dirname, '..', 'sample_data', 'nodes.json');
+    // Allows an isolated, versioned experiment policy-information dataset to
+    // be supplied without editing the checked-in sample identities.
+    this.dataFile = process.env.PIP_DATA_PATH
+      ? path.resolve(process.env.PIP_DATA_PATH)
+      : path.join(__dirname, '..', 'sample_data', 'nodes.json');
   }
 
   readData() {

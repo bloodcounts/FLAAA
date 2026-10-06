@@ -20,7 +20,25 @@ router.get('/getDecision', validateDecisionQuery, async (req, res, next) => {
     }
 
     const decision = await luas.evaluates(requestXml);
-    return res.json({ decision });
+    // Every externally served decision gets a signed audit record when the
+    // deployment requires ES256 signing.  A signing/audit failure is a PDP
+    // failure rather than an unsigned Permit.
+    if (container.loggerInstance) {
+      container.loggerInstance.log(
+        decision,
+        null,
+        {
+          action: req.query.action,
+          task_id: req.query.task_id,
+          node_id: req.query.node_id,
+          policy: container.policyMetadata,
+          request_xml: requestXml,
+        },
+      );
+    }
+    const response = { decision };
+    if (container.policyMetadata) response.policy = container.policyMetadata;
+    return res.json(response);
   } catch (err) {
     return next(err);
   }

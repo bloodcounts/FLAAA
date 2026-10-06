@@ -15,6 +15,7 @@
             - task_approval
             - membership_validation
             - train
+            - aggregate
             - evaluate
         description: The action type to evaluate
       - in: query

@@ -14,7 +14,7 @@ class AccessControlConfig:
     # API key for authentication
     api_key: str
     
-    # Request timeout in seconds
+    # Timeout in seconds for each HTTP attempt
     timeout_seconds: int = 5
     
     # Number of retries on failure
@@ -26,11 +26,15 @@ class AccessControlConfig:
     @classmethod
     def from_env(cls) -> "AccessControlConfig":
         """Load configuration from environment variables."""
+        endpoint = os.getenv("EXTERNAL_ACL_API_ENDPOINT", "").strip()
+        if not endpoint:
+            raise ValueError(
+                "EXTERNAL_ACL_API_ENDPOINT must be set when governance enforcement is enabled"
+            )
+        if not endpoint.startswith("https://"):
+            raise ValueError("EXTERNAL_ACL_API_ENDPOINT must use HTTPS")
         return cls(
-            api_endpoint=os.getenv(
-                "EXTERNAL_ACL_API_ENDPOINT",
-                "https://acl.yourcompany.com/api/v1"
-            ),
+            api_endpoint=endpoint,
             api_key=os.getenv("EXTERNAL_ACL_API_KEY", ""),
             timeout_seconds=int(os.getenv("EXTERNAL_ACL_TIMEOUT", "5")),
             retry_count=int(os.getenv("EXTERNAL_ACL_RETRY_COUNT", "2")),

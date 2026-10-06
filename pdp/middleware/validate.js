@@ -5,6 +5,7 @@ const VALID_ACTIONS = [
   'task_approval', 'task-approval', 'taskapproval', 'taks_approval',
   'membership_validation', 'membership-validation', 'membershipvalidation', 'memebership_validation',
   'train',
+  'aggregate',
   'evaluate',
 ];
 
@@ -38,6 +39,7 @@ const schemaByAction = {
   membershipvalidation: membershipSchema,
   memebership_validation: membershipSchema,
   train: trainSchema,
+  aggregate: trainSchema,
   evaluate: trainSchema,
 };
 

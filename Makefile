@@ -97,16 +97,14 @@ run-docker-logs: ## Tail Flower simulation logs (superlink + workers)
 		'tail -f /root/.flwr/local-superlink/superlink.log /tmp/ray/session_latest/logs/worker-*.err 2>/dev/null'
 
 # ── Tests ───────────────────────────────────────────────────────
-test-unit: ## Run aggregation strategy unit tests
-	@if [ -d aggregation-strategies/tests ]; then \
-		docker run --rm -v $(CURDIR):/workspace -w /workspace/aggregation-strategies python:3.12-slim sh -c \
-			"pip install --no-cache-dir pytest >/dev/null && python -m pytest tests/ -v"; \
-	else \
-		echo "No aggregation-strategies/tests directory found; skipping unit tests."; \
-	fi
+test-unit: ## Run synthetic Python integration checks and PDP unit tests
+	python3 -m unittest discover -s tests -v
+	cd pdp && npm test
 
 test-conformance: ## Run PDP XACML conformance tests
-	cd pdp && [ -d node_modules ] || npm ci
 	cd pdp && npm run conformance
 
-test: test-unit test-conformance ## Run all tests
+check-public: ## Check source publication paths for private artifacts
+	python3 scripts/check_public_files.py
+
+test: test-unit test-conformance check-public ## Run checks

@@ -340,7 +340,7 @@ ComparisonFunction.prototype.evaluate = function (inputs, context) {
 
 		case ID_DATETIME_GREATER_THAN: {
 			if (!v0 || !v1) return this.makeProcessingError('Missing datetime values');
-			console.log('ComparisonFunction DATETIME args:', { v0, v1 });
+			if (process.env.LUAS_TRACE === 'true') console.log('ComparisonFunction DATETIME args:', { v0, v1 });
 			boolResult = (dateCompare(v0.value || v0.getValue(), v0.nanoseconds || v0.nanoseconds, v1.value || v1.getValue(), v1.nanoseconds || v1.nanoseconds) > 0);
 
 			break;

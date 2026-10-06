@@ -1,32 +1,25 @@
 const { expect } = require('chai');
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const PolicyInformationPoint = require('../../utils/policyInformationPoint');
 
 describe('PolicyInformationPoint', () => {
   let pip;
-  let originalData;
+  let directory;
+  let originalPath;
 
   beforeEach(() => {
+    originalPath = process.env.PIP_DATA_PATH;
+    directory = fs.mkdtempSync(path.join(os.tmpdir(), 'flaaa-pip-'));
+    process.env.PIP_DATA_PATH = path.join(directory, 'nodes.json');
     pip = new PolicyInformationPoint();
-    // Backup original data if it exists
-    try {
-      originalData = fs.readFileSync(pip.dataFile, 'utf8');
-    } catch (err) {
-      originalData = null;
-    }
   });
 
   afterEach(() => {
-    // Restore original data
-    if (originalData !== null) {
-      fs.writeFileSync(pip.dataFile, originalData);
-    } else {
-      try {
-        fs.unlinkSync(pip.dataFile);
-      } catch (err) {
-        // File doesn't exist, that's fine
-      }
-    }
+    if (originalPath === undefined) delete process.env.PIP_DATA_PATH;
+    else process.env.PIP_DATA_PATH = originalPath;
+    fs.rmSync(directory, { recursive: true, force: true });
   });
 
   describe('readData()', () => {

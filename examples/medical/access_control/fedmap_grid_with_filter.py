@@ -28,6 +28,8 @@ import torch
 import torch.nn as nn
 from collections import OrderedDict
 
+from .fedavg_grid_with_filter import _log_reply_metrics
+
 
 class FedMAPWithFilter(Strategy):
     """Federated MAP strategy with ICNN prior and external PEP access control.
@@ -86,6 +88,8 @@ class FedMAPWithFilter(Strategy):
         icnn_key: str = "icnn",
         configrecord_key: str = "config",
         icnn_modules: Optional[nn.ModuleDict] = None,
+        icnn_lr: float = 1e-3,
+        icnn_steps: int = 2,
         train_metrics_aggr_fn: Optional[
             Callable[[list[RecordDict], str], MetricRecord]
         ] = None,
@@ -123,8 +127,8 @@ class FedMAPWithFilter(Strategy):
             evaluate_metrics_aggr_fn or aggregate_metricrecords
         )
         
-        self.icnn_lr = 1e-3            
-        self.icnn_steps = 2             
+        self.icnn_lr = icnn_lr
+        self.icnn_steps = icnn_steps
         self.icnn_device = torch.device("cpu")
    
         if self.fraction_evaluate == 0.0:
@@ -176,21 +180,21 @@ class FedMAPWithFilter(Strategy):
     # Access Control Methods (identical to FedAvgGridWithFilter)
     # =========================================================================
 
-    def _check_full_training_allowed(self, node_id: int) -> tuple[bool, str]:
-        """Delegate to validator; fail-open on errors."""
+    def _check_full_training_allowed(self, node_id: int, action: str = "train") -> tuple[bool, str]:
+        """Delegate to validator; fail closed on errors."""
         try:
-            return self.access_validator.is_allowed_full_training(node_id)
+            return self.access_validator.is_allowed_full_training(node_id, action=action)
         except Exception as e:
             log(WARNING, "Error calling PEP for node %d: %s", node_id, e)
-            return True, "PEP error - allowing by default"
+            return False, "PEP error - denied (fail closed)"
 
     def _check_evaluation_allowed(self, node_id: int) -> tuple[bool, str]:
-        """Delegate to validator for evaluation checks; fail-open on errors."""
+        """Delegate to validator for evaluation checks; fail closed on errors."""
         try:
             return self.access_validator.is_allowed_to_evaluate(node_id)
         except Exception as e:
             log(WARNING, "Error calling PEP (evaluate) for node %d: %s", node_id, e)
-            return True, "PEP error - allowing by default"
+            return False, "PEP error - denied (fail closed)"
 
     # =========================================================================
     # Training Configuration and Aggregation with Access Control
@@ -310,7 +314,7 @@ class FedMAPWithFilter(Strategy):
         if validate and valid_replies:
             validate_message_reply_consistency(
                 replies=[msg.content for msg in valid_replies],
-                weighted_by_key=self.weighted_by_key,
+                weighted_by_key=self.weighted_by_key if is_train else "num-examples",
                 check_arrayrecord=is_train,
             )
 
@@ -338,7 +342,7 @@ class FedMAPWithFilter(Strategy):
                 continue
 
             node_id = message.metadata.src_node_id
-            allowed, reason = self._check_full_training_allowed(node_id)
+            allowed, reason = self._check_full_training_allowed(node_id, action="aggregate")
             if allowed:
                 eligible_replies.append(message)
                 log(INFO, "  ✅ Node %d: INCLUDED in aggregation", node_id)
@@ -562,6 +566,7 @@ class FedMAPWithFilter(Strategy):
         )
 
         # Always inject current server round
+        config = ConfigRecord({**dict(config), "fedmap_personalize": True})
         config["server-round"] = server_round
 
         # Construct messages
@@ -608,6 +613,7 @@ class FedMAPWithFilter(Strategy):
         log(INFO, "  └── Including all evaluation results\n")
         
         valid_replies, _ = self._check_and_log_replies(replies_list, is_train=False)
+        _log_reply_metrics(server_round, valid_replies)
 
         metrics = None
         if valid_replies:
@@ -616,6 +622,6 @@ class FedMAPWithFilter(Strategy):
             # Aggregate MetricRecords
             metrics = self.evaluate_metrics_aggr_fn(
                 reply_contents,
-                self.weighted_by_key,
+                "num-examples",
             )
         return metrics

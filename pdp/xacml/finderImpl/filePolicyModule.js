@@ -70,14 +70,14 @@ FilePolicyModule.prototype.findPolicy = function (context) {
 
   var selectedPolicy = null;
   const policiesLength = this.policies.length;
-  console.log(`Evaluating ${policiesLength} policy(ies)`);
+  if (process.env.LUAS_TRACE === 'true') console.log(`Evaluating ${policiesLength} policy(ies)`);
   for (var i = 0; i < policiesLength; i++) {
     var policy = this.policies[i];
 
     var match = policy.match(context);
     var result = match.getResult();
 
-    console.log(`Policy ${policy.idAttr} match result: ${result}`);
+    if (process.env.LUAS_TRACE === 'true') console.log(`Policy ${policy.idAttr} match result: ${result}`);
 
     if (result == MatchResult.prototype.INDETERMINATE) {
       var policyFinderResult = new PolicyFinderResult();
@@ -98,7 +98,7 @@ FilePolicyModule.prototype.findPolicy = function (context) {
       }
 
       selectedPolicy = policy;
-      console.log(`Selected policy: ${selectedPolicy.idAttr}`);
+      if (process.env.LUAS_TRACE === 'true') console.log(`Selected policy: ${selectedPolicy.idAttr}`);
       
     }
   }

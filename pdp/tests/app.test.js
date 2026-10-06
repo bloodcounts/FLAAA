@@ -56,15 +56,19 @@ describe('App Configuration', () => {
     it('should create container with correct config', () => {
       const Container = require('../createDependencies');
 
+      // Container eagerly reads every policy file's bytes to compute a
+      // SHA-256 policy digest (see createDependencies.js), so these must be
+      // real, readable files rather than placeholder names.
+      const realPolicy = path.join(__dirname, '..', 'policies', 'medical.xml');
       const config = {
         port: 4000,
-        policyFiles: ['test1.xml', 'test2.xml']
+        policyFiles: [realPolicy, realPolicy]
       };
 
       const container = new Container(config);
 
       expect(container.port).to.equal(4000);
-      expect(container.policyFiles).to.deep.equal(['test1.xml', 'test2.xml']);
+      expect(container.policyFiles).to.deep.equal([realPolicy, realPolicy]);
     });
 
     it('should create container with default config', () => {

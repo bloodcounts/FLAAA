@@ -1,71 +1,38 @@
-# Aggregation Strategies
+# Governance-filtered aggregation strategies
 
-Federated learning aggregation strategies with access control filtering for the FLAAA project.
+This package provides four strategies for Flower's message-based Grid API. A supplied validator checks whether each sampled node may train or evaluate and rechecks training replies before aggregation. Validator failures deny participation.
 
-## Features
+| Class | Behaviour |
+| --- | --- |
+| `FedAvgGridWithFilter` | Sample-count-weighted averaging |
+| `FedProxGridWithFilter` | FedAvg plus `proximal_mu` in train messages; clients apply the proximal loss |
+| `FedPerGridWithFilter` | FedAvg plus a personal-head flag; clients retain their last layer locally |
+| `FedMAPWithFilter` | ICNN prior updates and contribution-weighted model averaging |
 
-This package provides two aggregation strategies that integrate with external Policy Enforcement Points (PEP) for access control:
+## Install
 
-- **FedAvgGridWithFilter**: Federated Averaging with access control filtering
-- **FedMAPWithFilter**: Federated MAP with ICNN prior and access control filtering
-
-Both strategies delegate authorization decisions to an external access control validator, allowing fine-grained control over which nodes can participate in training and evaluation.
-
-## Installation
-
-Install in development mode:
+From the repository root:
 
 ```bash
-cd /home/fan/projects/FLAAA/aggregation-strategies
-pip install -e .
+pip install -e ./aggregation-strategies
 ```
 
-## Usage
+Python 3.11 or later, Flower 1.36.0, PyTorch and NumPy are required. Strategy sampling follows the [Flower FedAvg API](https://flower.ai/docs/framework/1.36/en/ref-api/flwr.serverapp.strategy.FedAvg.html).
+
+## Use
 
 ```python
-from aggregation_strategies.strategies import FedAvgGridWithFilter, FedMAPWithFilter
-from flwr_abac.access_control.validator_pep import ExternalAccessControlValidator
+from aggregation_strategies import FedProxGridWithFilter
 
-# Initialize access validator
-access_validator = ExternalAccessControlValidator()
-
-# Use FedAvg strategy with access control
-strategy = FedAvgGridWithFilter(
-    access_validator=access_validator,
+strategy = FedProxGridWithFilter(
+    access_validator=validator,
     federation="medical",
-)
-
-# Or use FedMAP strategy with access control
-strategy = FedMAPWithFilter(
-    access_validator=access_validator,
-    federation="medical",
-    icnn_modules=icnn_modules,  # Optional ICNN modules for personalization
+    proximal_mu=0.01,
+    fraction_train=1.0,
+    min_available_nodes=2,
 )
 ```
 
-## Strategies
+The validator must provide `is_allowed_full_training(node_id, action="train")` and `is_allowed_to_evaluate(node_id)`, each returning `(allowed, reason)`. Training-reply checks pass `action="aggregate"`. The [medical application](../examples/README.md) provides compatible clients, a HTTPS PEP validator and ICNN construction. FedProx and FedPer require clients that honour their train-message flags. FedMAP clients return the `omega` contribution metric and accept the `icnn` record.
 
-### FedAvgGridWithFilter
-
-Custom Grid API FedAvg strategy that uses external PEP for access control. It filters nodes during:
-- Training configuration
-- Training aggregation
-- Evaluation configuration
-
-### FedMAPWithFilter
-
-Federated MAP strategy with ICNN prior and external PEP access control. Supports:
-- Personalized aggregation using Input Convex Neural Networks (ICNN)
-- Weighted aggregation based on client contributions
-- Access control filtering for training and evaluation
-
-## Requirements
-
-- Python >= 3.9
-- Flower >= 1.0.0
-- PyTorch >= 2.0.0
-- NumPy >= 1.24.0
-
-## License
-
-Apache-2.0
+Study approval and node activation checks belong to the application or coordinator before the strategy starts. The strategy does not provision memberships or grant study approval.

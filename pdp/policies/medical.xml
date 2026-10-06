@@ -411,6 +411,17 @@
                             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">medical</AttributeValue>
                         </Apply>
 
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                    AttributeId="is_member_of_task"
+                                    DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                    MustBePresent="true"/>
+                            </Apply>
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+                        </Apply>
+
                         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than">
                             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only">
                                 <AttributeDesignator
@@ -514,6 +525,16 @@
                                                  DataType="http://www.w3.org/2001/XMLSchema#dateTime"
                                                  MustBePresent="true"/>
                         </Apply>
+                    </Apply>
+
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                                 AttributeId="is_member_of_task"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                                 MustBePresent="true"/>
+                        </Apply>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
                     </Apply>
 
                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">

@@ -13,7 +13,8 @@
     "lint:fix": "eslint . --fix",
     "depcheck": "npx depcheck",
     "conformance": "node ./comformance/fl-tests/run_tests.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "verify:audit": "node scripts/verify_audit.js"
   },
   "lint-staged": {
     "*.js": [
